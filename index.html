@@ -10,6 +10,7 @@
 <!-- Firebase (লগইন সিস্টেমের জন্য) -->
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
 <style>
 
   /* ============================================================
@@ -383,6 +384,7 @@ const firebaseConfig = {
 };
 firebase.initializeApp(firebaseConfig);
 const auth = firebase.auth();
+const db = firebase.firestore();
 
 /* ================================================================
    ধাপ ২: কমিটির (সবার হিসাব দেখতে পারবে এমন) ইমেইল এখানে লিখুন
@@ -430,120 +432,25 @@ const SOMITI_DATA = {
     { date: "সেপ্টেম্বর ২০২৬", title: "সমিতি শুরু হয়েছে", body: "TEAM PATHAN TRUST & UNITY SOCIETY আনুষ্ঠানিকভাবে যাত্রা শুরু করেছে। সকল সদস্যকে নিয়মিত চাঁদা পরিশোধের অনুরোধ করা হচ্ছে।" }
   ],
   members: [
-    {
-      id: "TP01", name: "ZIAUR RAHMAN", email: "tp01@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:1000, status:"paid"}
-      ]
-    },
-    {
-      id: "TP02", name: "ZIAUR RAHMAN -02", email: "tp02@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:1000, status:"paid"}
-      ]
-    },
-    {
-      id: "TP03", name: "MD SHAH ALAM", email: "tp03@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP04", name: "MD SHAH ALAM-02", email: "tp04@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP05", name: "MOHAMMAD JONY", email: "tp05@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP06", name: "MD JOSIM UDDIN", email: "tp06@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP07", name: "MOHAMMAD AMIR HAMZA", email: "tp07@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP08", name: "MOHAMMAD AMIR HAMZA-02", email: "tp08@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP09", name: "FAKHRUL ISLAM POLASH", email: "tp09@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP10", name: "AZHARUL ISLAM PIYASH", email: "tp10@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP11", name: "SHAHID WAHID", email: "tp11@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP12", name: "MD SADEK HOSSAIN RIPON", email: "tp12@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP13", name: "SHAKIL KHAN", email: "tp13@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP14", name: "OSMAN GONI", email: "tp14@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP15", name: "JUBAYER HOSEN SAIMUN", email: "tp15@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP16", name: "JANNATUL FERDOUS JUTHI", email: "tp16@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP17", name: "MD JOSIM UDDIN-02", email: "tp17@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP18", name: "MD JOSIM UDDIN-03", email: "tp18@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    },
-    {
-      id: "TP19", name: "SAWON", email: "tp19@teampathan.local", monthly: 1000,
-      history: [
-        {month:"সেপ্টেম্বর ২০২৬", paid:0, status:"due"}
-      ]
-    }
+    { id: "TP01", name: "ZIAUR RAHMAN" },
+    { id: "TP02", name: "ZIAUR RAHMAN -02" },
+    { id: "TP03", name: "MD SHAH ALAM" },
+    { id: "TP04", name: "MD SHAH ALAM-02" },
+    { id: "TP05", name: "MOHAMMAD JONY" },
+    { id: "TP06", name: "MD JOSIM UDDIN" },
+    { id: "TP07", name: "MOHAMMAD AMIR HAMZA" },
+    { id: "TP08", name: "MOHAMMAD AMIR HAMZA-02" },
+    { id: "TP09", name: "FAKHRUL ISLAM POLASH" },
+    { id: "TP10", name: "AZHARUL ISLAM PIYASH" },
+    { id: "TP11", name: "SHAHID WAHID" },
+    { id: "TP12", name: "MD SADEK HOSSAIN RIPON" },
+    { id: "TP13", name: "SHAKIL KHAN" },
+    { id: "TP14", name: "OSMAN GONI" },
+    { id: "TP15", name: "JUBAYER HOSEN SAIMUN" },
+    { id: "TP16", name: "JANNATUL FERDOUS JUTHI" },
+    { id: "TP17", name: "MD JOSIM UDDIN-02" },
+    { id: "TP18", name: "MD JOSIM UDDIN-03" },
+    { id: "TP19", name: "SAWON" }
   ],
   lastUpdated: "২৭ আগস্ট ২০২৬"
 };
@@ -594,19 +501,22 @@ function render(){
       <div><div class="mname">${m.name}</div><div class="role">${m.id}</div></div>
     </div>`).join('');
 
-  renderAdminTable(SOMITI_DATA.members);
+  // পাবলিক লিস্টে শুধু নাম-আইডি দেখাবে (টাকার তথ্য এখানে নেই, নেই বলেই সোর্সে দেখা যায় না)
+  renderAdminTable([]); // প্রথমে খালি; আসল ডেটা লগইনের পর Firestore থেকে আসবে
 }
 
+let fetchedMembers = []; // এডমিন লগইন করলে Firestore থেকে আনা পূর্ণ ডেটা এখানে থাকবে
+
 function renderAdminTable(list){
-  const totalPaid = SOMITI_DATA.members.reduce((s,m)=>s+memberTotals(m).totalPaid,0);
-  const totalDue = SOMITI_DATA.members.reduce((s,m)=>s+memberTotals(m).due,0);
-  document.getElementById('sumMembers').textContent = bn(SOMITI_DATA.members.length);
+  const totalPaid = list.reduce((s,m)=>s+memberTotals(m).totalPaid,0);
+  const totalDue = list.reduce((s,m)=>s+memberTotals(m).due,0);
+  document.getElementById('sumMembers').textContent = bn(list.length);
   document.getElementById('sumPaid').textContent = money(totalPaid);
   document.getElementById('sumDue').textContent = money(totalDue);
 
   document.getElementById('accountsBody').innerHTML = list.map(m => {
     const t = memberTotals(m);
-    const historyRows = m.history.map(h => `
+    const historyRows = (m.history||[]).map(h => `
       <tr class="sub-row"><td colspan="2" style="padding-left:32px; color:var(--ink-soft);">${h.month}</td><td></td><td class="amt">${money(h.paid)}</td><td></td><td><span class="status ${h.status}">${statusLabel[h.status]}</span></td></tr>
     `).join('');
     return `<tr class="member-row" data-id="${m.id}" style="cursor:pointer;">
@@ -651,7 +561,7 @@ function renderMyView(member){
   document.getElementById('myMonthly').textContent = money(member.monthly);
   document.getElementById('myPaid').textContent = money(t.totalPaid);
   document.getElementById('myDue').textContent = money(t.due);
-  document.getElementById('myHistoryBody').innerHTML = member.history.map(h => `
+  document.getElementById('myHistoryBody').innerHTML = (member.history||[]).map(h => `
     <tr><td>${h.month}</td><td class="amt">${money(h.paid)}</td><td><span class="status ${h.status}">${statusLabel[h.status]}</span></td></tr>
   `).join('');
 }
@@ -667,14 +577,14 @@ document.querySelectorAll('#mainNav button').forEach(btn=>{
   });
 });
 
-// admin table search
+// admin table search (fetchedMembers এর মধ্যে খোঁজে, স্থানীয় ডেটায় না)
 document.getElementById('adminView').addEventListener('input', (e)=>{
   if(e.target.id !== 'memberSearch') return;
   const q = e.target.value.trim().toLowerCase();
-  renderAdminTable(SOMITI_DATA.members.filter(m => m.name.toLowerCase().includes(q)));
+  renderAdminTable(fetchedMembers.filter(m => m.name.toLowerCase().includes(q)));
 });
 
-/* ===================== Firebase লগইন/লগআউট ===================== */
+/* ===================== Firebase লগইন/লগআউট + Firestore থেকে ডেটা আনা ===================== */
 const loginGate = document.getElementById('loginGate');
 const adminView = document.getElementById('adminView');
 const myView = document.getElementById('myView');
@@ -698,7 +608,7 @@ document.getElementById('loginBtn').addEventListener('click', attemptLogin);
   document.getElementById(id).addEventListener('click', ()=> auth.signOut());
 });
 
-auth.onAuthStateChanged(user => {
+auth.onAuthStateChanged(async user => {
   [loginGate, adminView, myView, noMatchView].forEach(el => el.classList.add('hidden'));
   if(!user){
     loginGate.classList.remove('hidden');
@@ -707,16 +617,32 @@ auth.onAuthStateChanged(user => {
     return;
   }
   const email = (user.email || '').toLowerCase();
+
   if(ADMIN_EMAILS.map(e=>e.toLowerCase()).includes(email)){
-    adminView.classList.remove('hidden');
-    renderAdminTable(SOMITI_DATA.members);
+    // এডমিন: Firestore থেকে সব সদস্যের পূর্ণ ডেটা আনা হচ্ছে
+    try{
+      const snapshot = await db.collection('members').get();
+      fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      adminView.classList.remove('hidden');
+      renderAdminTable(fetchedMembers);
+    }catch(err){
+      loginGate.classList.remove('hidden');
+      loginError.textContent = 'ডেটা আনতে সমস্যা হয়েছে: ' + err.message;
+    }
     return;
   }
-  const member = SOMITI_DATA.members.find(m => (m.email||'').toLowerCase() === email);
-  if(member){
-    myView.classList.remove('hidden');
-    renderMyView(member);
-  } else {
+
+  // সাধারণ সদস্য: শুধু নিজের ডকুমেন্ট আনা হচ্ছে (ইমেইল মিলিয়ে)
+  try{
+    const snapshot = await db.collection('members').where('email','==', user.email).limit(1).get();
+    if(!snapshot.empty){
+      const doc = snapshot.docs[0];
+      myView.classList.remove('hidden');
+      renderMyView({ id: doc.id, ...doc.data() });
+    } else {
+      noMatchView.classList.remove('hidden');
+    }
+  }catch(err){
     noMatchView.classList.remove('hidden');
   }
 });
