@@ -155,6 +155,9 @@
   tbody td:first-child{ text-align:left; font-weight:600; }
   tbody tr:last-child td{ border-bottom:none; }
   tbody tr:hover{ background:var(--paper-2); }
+  tr.member-row:hover td:first-child{ color:var(--nil); font-weight:700; }
+  tr.sub-row td{ border-bottom:1px solid var(--line); font-size:.85rem; }
+  tr.history-rows table{ border-collapse:collapse; }
   .amt{ font-family:'JetBrains Mono',monospace; }
   .status{ display:inline-block; padding:3px 10px; border-radius:999px; font-size:.78rem; font-weight:600; }
   .status.paid{ background:#E3F1E7; color:var(--paid); }
@@ -281,6 +284,7 @@
         <div class="stat-card"><div class="num mono due" id="sumDue">৳০</div><div class="lbl">মোট বকেয়া</div></div>
       </div>
       <div class="search-bar"><input type="text" id="memberSearch" placeholder="নাম দিয়ে খুঁজুন..."></div>
+      <p style="color:var(--ink-soft); font-size:.85rem; margin:-6px 0 12px;">💡 কোনো সদস্যের নামে ক্লিক করলে তার মাসভিত্তিক (কোন মাসে পরিশোধিত/বকেয়া) হিসাব খুলে দেখা যাবে।</p>
       <div class="card table-wrap">
         <table>
           <thead><tr><th>সদস্যের নাম</th><th>Member ID</th><th>মাসিক চাঁদা</th><th>মোট জমা</th><th>বকেয়া</th><th>স্ট্যাটাস</th></tr></thead>
@@ -602,15 +606,39 @@ function renderAdminTable(list){
 
   document.getElementById('accountsBody').innerHTML = list.map(m => {
     const t = memberTotals(m);
-    return `<tr>
-      <td>${m.name}</td>
+    const historyRows = m.history.map(h => `
+      <tr class="sub-row"><td colspan="2" style="padding-left:32px; color:var(--ink-soft);">${h.month}</td><td></td><td class="amt">${money(h.paid)}</td><td></td><td><span class="status ${h.status}">${statusLabel[h.status]}</span></td></tr>
+    `).join('');
+    return `<tr class="member-row" data-id="${m.id}" style="cursor:pointer;">
+      <td>▸ ${m.name}</td>
       <td class="amt">${m.id}</td>
       <td class="amt">${money(m.monthly)}</td>
       <td class="amt">${money(t.totalPaid)}</td>
       <td class="amt">${money(t.due)}</td>
       <td><span class="status ${t.status}">${statusLabel[t.status]}</span></td>
+    </tr>
+    <tr class="history-rows hidden" data-parent="${m.id}">
+      <td colspan="6" style="padding:0;">
+        <table style="width:100%; margin:0;"><tbody>${historyRows}</tbody></table>
+      </td>
     </tr>`;
   }).join('');
+
+  // ক্লিক করলে নাম-প্রতি মাসের হিসাব খুলবে/বন্ধ হবে
+  document.querySelectorAll('#accountsBody tr.member-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const id = row.dataset.id;
+      const detail = document.querySelector(`#accountsBody tr.history-rows[data-parent="${id}"]`);
+      const arrow = row.querySelector('td:first-child');
+      if(detail.classList.contains('hidden')){
+        detail.classList.remove('hidden');
+        arrow.textContent = arrow.textContent.replace('▸','▾');
+      } else {
+        detail.classList.add('hidden');
+        arrow.textContent = arrow.textContent.replace('▾','▸');
+      }
+    });
+  });
 }
 
 function renderMyView(member){
