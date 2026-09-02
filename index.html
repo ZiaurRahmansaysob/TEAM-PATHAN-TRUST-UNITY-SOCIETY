@@ -634,4 +634,53 @@ function attemptLogin(){
 }
 document.getElementById('loginBtn').addEventListener('click', attemptLogin);
 ['loginEmail','loginPassword'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown', e=>{ if
+  document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter') attemptLogin(); });
+});
+
+[['logoutBtnAdmin'],['logoutBtnMy'],['logoutBtnNoMatch']].forEach(([id])=>{
+  document.getElementById(id).addEventListener('click', ()=> auth.signOut());
+});
+
+auth.onAuthStateChanged(async user => {
+  [loginGate, adminView, myView, noMatchView].forEach(el => el.classList.add('hidden'));
+  if(!user){
+    loginGate.classList.remove('hidden');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    return;
+  }
+  const email = (user.email || '').toLowerCase();
+
+  if(ADMIN_EMAILS.map(e=>e.toLowerCase()).includes(email)){
+    // এডমিন: Firestore থেকে সব সদস্যের পূর্ণ ডেটা আনা হচ্ছে
+    try{
+      const snapshot = await db.collection('members').get();
+      fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      adminView.classList.remove('hidden');
+      renderAdminTable(fetchedMembers);
+    }catch(err){
+      loginGate.classList.remove('hidden');
+      loginError.textContent = 'ডেটা আনতে সমস্যা হয়েছে: ' + err.message;
+    }
+    return;
+  }
+
+  // সাধারণ সদস্য: শুধু নিজের ডকুমেন্ট আনা হচ্ছে (ইমেইল মিলিয়ে)
+  try{
+    const snapshot = await db.collection('members').where('email','==', user.email).limit(1).get();
+    if(!snapshot.empty){
+      const doc = snapshot.docs[0];
+      myView.classList.remove('hidden');
+      renderMyView({ id: doc.id, ...doc.data() });
+    } else {
+      noMatchView.classList.remove('hidden');
+    }
+  }catch(err){
+    noMatchView.classList.remove('hidden');
+  }
+});
+
+render();
+</script>
+</body>
+</html>
