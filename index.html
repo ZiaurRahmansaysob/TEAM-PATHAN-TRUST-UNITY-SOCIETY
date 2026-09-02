@@ -171,6 +171,12 @@
   .my-summary{ display:flex; align-items:center; gap:16px; padding:22px 24px; margin-bottom:22px; flex-wrap:wrap; }
   .my-summary .avatar{ width:56px; height:56px; font-size:1.3rem; }
   .my-summary .mid{ font-family:'JetBrains Mono',monospace; font-size:.8rem; color:var(--ink-soft); }
+  .avatar img{ width:100%; height:100%; object-fit:cover; border-radius:50%; }
+  .profile-row{ display:flex; gap:14px; font-size:.92rem; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  .profile-row:last-child{ border-bottom:none; padding-bottom:0; }
+  .profile-row b{ min-width:120px; color:var(--nil); flex-shrink:0; }
+  .profile-mini{ padding:14px 18px; background:var(--paper-2); font-size:.85rem; }
+  .profile-mini .profile-row{ border-bottom:1px solid var(--line); padding:6px 0; }
 
   #contact .card{ padding:26px; display:grid; gap:10px; }
   #contact .row{ display:flex; gap:10px; font-size:.95rem; }
@@ -314,6 +320,9 @@
         <div class="stat-card"><div class="num mono paid" id="myPaid">৳০</div><div class="lbl">আমার মোট জমা</div></div>
         <div class="stat-card"><div class="num mono due" id="myDue">৳০</div><div class="lbl">আমার বকেয়া</div></div>
       </div>
+      <div class="section-head" style="margin-top:22px; margin-bottom:14px;"><h2 style="font-size:1.2rem;">ব্যক্তিগত তথ্য</h2></div>
+      <div class="card" id="myProfileCard" style="padding:20px 24px; display:grid; gap:10px;"></div>
+
       <div class="section-head" style="margin-top:26px; margin-bottom:14px;"><h2 style="font-size:1.2rem;">মাসভিত্তিক হিসাব</h2></div>
       <div class="card table-wrap">
         <table>
@@ -463,6 +472,28 @@ function bn(num){
 function money(num){ return '৳' + bn(num.toLocaleString('en-IN')); }
 const statusLabel = { paid:'পরিশোধিত', due:'বকেয়া', partial:'আংশিক' };
 
+function avatarHTML(m, size){
+  if(m.photoUrl){
+    return `<img src="${m.photoUrl}" alt="${m.name}">`;
+  }
+  return (m.name||'?').trim()[0];
+}
+
+function profileFieldsHTML(m){
+  const fields = [
+    ['পিতার নাম', m.father],
+    ['মাতার নাম', m.mother],
+    ['জন্মতারিখ', m.dob],
+    ['ঠিকানা', m.address],
+    ['মোবাইল', m.mobile],
+    ['নমিনি', m.nominee]
+  ].filter(([label, value]) => value && String(value).trim() !== '');
+  if(fields.length === 0){
+    return '<div class="profile-row" style="color:var(--ink-soft);">এখনো কোনো অতিরিক্ত তথ্য যোগ করা হয়নি।</div>';
+  }
+  return fields.map(([label, value]) => `<div class="profile-row"><b>${label}</b><span>${value}</span></div>`).join('');
+}
+
 function memberTotals(m){
   const totalPaid = m.history.reduce((s,h)=>s+h.paid,0);
   const expected = m.monthly * m.history.length;
@@ -529,6 +560,7 @@ function renderAdminTable(list){
     </tr>
     <tr class="history-rows hidden" data-parent="${m.id}">
       <td colspan="6" style="padding:0;">
+        <div class="profile-mini">${profileFieldsHTML(m)}</div>
         <table style="width:100%; margin:0;"><tbody>${historyRows}</tbody></table>
       </td>
     </tr>`;
@@ -553,7 +585,7 @@ function renderAdminTable(list){
 
 function renderMyView(member){
   const t = memberTotals(member);
-  document.getElementById('myAvatar').textContent = member.name.trim()[0];
+  document.getElementById('myAvatar').innerHTML = avatarHTML(member);
   document.getElementById('myName').textContent = member.name;
   document.getElementById('myId').textContent = 'Member ID: ' + member.id;
   document.getElementById('myStatus').textContent = statusLabel[t.status];
@@ -561,6 +593,7 @@ function renderMyView(member){
   document.getElementById('myMonthly').textContent = money(member.monthly);
   document.getElementById('myPaid').textContent = money(t.totalPaid);
   document.getElementById('myDue').textContent = money(t.due);
+  document.getElementById('myProfileCard').innerHTML = profileFieldsHTML(member);
   document.getElementById('myHistoryBody').innerHTML = (member.history||[]).map(h => `
     <tr><td>${h.month}</td><td class="amt">${money(h.paid)}</td><td><span class="status ${h.status}">${statusLabel[h.status]}</span></td></tr>
   `).join('');
@@ -601,53 +634,4 @@ function attemptLogin(){
 }
 document.getElementById('loginBtn').addEventListener('click', attemptLogin);
 ['loginEmail','loginPassword'].forEach(id=>{
-  document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter') attemptLogin(); });
-});
-
-[['logoutBtnAdmin'],['logoutBtnMy'],['logoutBtnNoMatch']].forEach(([id])=>{
-  document.getElementById(id).addEventListener('click', ()=> auth.signOut());
-});
-
-auth.onAuthStateChanged(async user => {
-  [loginGate, adminView, myView, noMatchView].forEach(el => el.classList.add('hidden'));
-  if(!user){
-    loginGate.classList.remove('hidden');
-    document.getElementById('loginEmail').value = '';
-    document.getElementById('loginPassword').value = '';
-    return;
-  }
-  const email = (user.email || '').toLowerCase();
-
-  if(ADMIN_EMAILS.map(e=>e.toLowerCase()).includes(email)){
-    // এডমিন: Firestore থেকে সব সদস্যের পূর্ণ ডেটা আনা হচ্ছে
-    try{
-      const snapshot = await db.collection('members').get();
-      fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-      adminView.classList.remove('hidden');
-      renderAdminTable(fetchedMembers);
-    }catch(err){
-      loginGate.classList.remove('hidden');
-      loginError.textContent = 'ডেটা আনতে সমস্যা হয়েছে: ' + err.message;
-    }
-    return;
-  }
-
-  // সাধারণ সদস্য: শুধু নিজের ডকুমেন্ট আনা হচ্ছে (ইমেইল মিলিয়ে)
-  try{
-    const snapshot = await db.collection('members').where('email','==', user.email).limit(1).get();
-    if(!snapshot.empty){
-      const doc = snapshot.docs[0];
-      myView.classList.remove('hidden');
-      renderMyView({ id: doc.id, ...doc.data() });
-    } else {
-      noMatchView.classList.remove('hidden');
-    }
-  }catch(err){
-    noMatchView.classList.remove('hidden');
-  }
-});
-
-render();
-</script>
-</body>
-</html>
+  document.getElementById(id).addEventListener('keydown', e=>{ if
