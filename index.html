@@ -197,6 +197,68 @@
   .profile-mini{ padding:14px 18px; background:var(--paper-2); font-size:.85rem; }
   .profile-mini .profile-row{ border-bottom:1px solid var(--line); padding:6px 0; }
 
+  .edit-panel{ background:var(--paper-2); padding:16px 18px; border-bottom:1px solid var(--line); }
+  .edit-panel-title{ font-weight:700; font-size:.85rem; color:var(--nil); margin-bottom:10px; }
+  .edit-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:10px; margin-bottom:12px; }
+  .edit-grid label{ display:flex; flex-direction:column; gap:4px; font-size:.78rem; color:var(--ink-soft); }
+  .edit-grid input, .edit-grid select{ padding:8px 10px; border-radius:8px; border:1px solid var(--line); font-size:.88rem; font-family:'Hind Siliguri',sans-serif; background:#fff; }
+  .edit-save-btn{ padding:8px 16px; border-radius:999px; border:none; background:var(--nil); color:#fff; font-weight:600; cursor:pointer; font-size:.82rem; }
+  .edit-status{ margin-left:10px; font-size:.8rem; color:var(--ink-soft); }
+
+  .dash-grid{ display:grid; grid-template-columns:1fr 1.3fr; gap:16px; margin-bottom:22px; }
+  .dash-balance-card{ background:linear-gradient(135deg, var(--nil), var(--nil-deep)); color:#fff; padding:24px; display:flex; flex-direction:column; justify-content:center; }
+  .dash-label{ font-size:.8rem; color:#C9D0EE; margin-bottom:6px; }
+  .dash-balance-num{ font-family:'JetBrains Mono',monospace; font-size:2rem; font-weight:700; }
+  .dash-sub{ font-size:.76rem; color:#9FA9D9; margin-top:6px; }
+  .dash-txn-card{ padding:18px 20px; }
+  .dash-txn-head{ font-weight:700; font-size:.9rem; color:var(--nil-deep); margin-bottom:10px; }
+  .dash-txn-row{ display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--line); }
+  .dash-txn-row:last-child{ border-bottom:none; }
+  .dash-txn-row .txn-icon{ width:32px; height:32px; font-size:.85rem; }
+  .dash-txn-name{ font-weight:600; font-size:.88rem; }
+  .dash-txn-sub{ font-size:.74rem; color:var(--ink-soft); }
+  .dash-txn-amt{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:.88rem; }
+  @media (max-width:760px){ .dash-grid{ grid-template-columns:1fr; } }
+
+  /* ---- সাইডবার ড্যাশবোর্ড লেআউট ---- */
+  .sdash-wrap{ display:flex; gap:20px; align-items:flex-start; }
+  .sdash-sidebar{
+    width:210px; flex-shrink:0; background:var(--nil-deep); border-radius:var(--radius);
+    padding:14px 10px; display:flex; flex-direction:column; gap:2px;
+    position:sticky; top:80px;
+  }
+  .sdash-side-title{ color:#8791C4; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; padding:8px 10px 4px; }
+  .sdash-link{
+    display:block; color:#E3E7F8; text-decoration:none; font-size:.85rem;
+    padding:9px 10px; border-radius:8px; transition:.15s;
+  }
+  .sdash-link:hover{ background:rgba(255,255,255,0.08); }
+  .sdash-link.active{ background:var(--gold); color:var(--nil-deep); font-weight:700; }
+  .sdash-link.soon{ color:#7C86B8; }
+  .sdash-main{ flex:1; min-width:0; }
+
+  .sdash-report-row{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:24px;
+  }
+  .sdash-pill{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 12px; text-align:center;
+  }
+  .sdash-pill .pnum{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1.05rem; }
+  .sdash-pill .plbl{ font-size:.7rem; color:var(--ink-soft); margin-top:4px; }
+  .sdash-pill.green .pnum{ color:var(--paid); }
+  .sdash-pill.amber .pnum{ color:#B8860B; }
+  .sdash-pill.red .pnum{ color:var(--due); }
+
+  @media (max-width:900px){
+    .sdash-wrap{ flex-direction:column; }
+    .sdash-sidebar{
+      width:100%; position:static; flex-direction:row; overflow-x:auto; gap:4px; padding:10px;
+    }
+    .sdash-side-title{ display:none; }
+    .sdash-link{ white-space:nowrap; flex-shrink:0; }
+    .sdash-report-row{ grid-template-columns:repeat(2,1fr); }
+  }
+
   #contact .card{ padding:26px; display:grid; gap:10px; }
   #contact .row{ display:flex; gap:10px; font-size:.95rem; }
   #contact .row b{ min-width:110px; color:var(--nil); }
@@ -304,18 +366,61 @@
         <span style="font-size:.85rem; color:var(--ink-soft);">কমিটি হিসেবে লগইন করা আছেন — সব সদস্যের হিসাব দেখা যাচ্ছে</span>
         <button id="logoutBtnAdmin" style="padding:8px 16px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:.85rem;">লগআউট</button>
       </div>
-      <div class="summary-row">
-        <div class="stat-card"><div class="num mono" id="sumMembers">০</div><div class="lbl">মোট সদস্য</div></div>
-        <div class="stat-card"><div class="num mono paid" id="sumPaid">৳০</div><div class="lbl">মোট জমা</div></div>
-        <div class="stat-card"><div class="num mono due" id="sumDue">৳০</div><div class="lbl">মোট বকেয়া</div></div>
-      </div>
-      <div class="search-bar"><input type="text" id="memberSearch" placeholder="নাম দিয়ে খুঁজুন..."></div>
-      <p style="color:var(--ink-soft); font-size:.85rem; margin:-6px 0 12px;">💡 কোনো সদস্যের নামে ক্লিক করলে তার মাসভিত্তিক (কোন মাসে পরিশোধিত/বকেয়া) হিসাব খুলে দেখা যাবে।</p>
-      <div class="card table-wrap">
-        <table>
-          <thead><tr><th>সদস্যের নাম</th><th>Member ID</th><th>মাসিক চাঁদা</th><th>মোট জমা</th><th>বকেয়া</th><th>স্ট্যাটাস</th></tr></thead>
-          <tbody id="accountsBody"></tbody>
-        </table>
+
+      <div class="sdash-wrap">
+        <!-- সাইডবার -->
+        <nav class="sdash-sidebar">
+          <div class="sdash-side-title">মেনু</div>
+          <a href="#sdashTop" class="sdash-link active" data-scroll="sdashTop">📊 ড্যাশবোর্ড</a>
+          <a href="#sdashMembers" class="sdash-link" data-scroll="sdashMembers">👥 সব সদস্য</a>
+          <div class="sdash-side-title" style="margin-top:14px;">শীঘ্রই আসছে</div>
+          <a href="#" class="sdash-link soon" data-soon="1">💰 লেনদেন ও কিস্তি</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🏦 সঞ্চয় স্কিম</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📜 নমিনি ও উত্তরাধিকার</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📝 চুক্তি ও স্ট্যাম্প</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📈 রিপোর্ট ও অডিট</a>
+          <a href="#" class="sdash-link soon" data-soon="1">💵 আয়-ব্যয়</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🏧 ব্যাংক ও ক্যাশ ভল্ট</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🧑‍💼 স্টাফ ও ইউজার</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📤 এক্সেল ইমপোর্ট/এক্সপোর্ট</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🧾 রিসিট ও প্রিন্ট</a>
+        </nav>
+
+        <!-- মূল কনটেন্ট -->
+        <div class="sdash-main">
+          <div id="sdashTop"></div>
+          <div class="dash-grid">
+            <div class="card dash-balance-card">
+              <div class="dash-label">সমিতির মোট ব্যালেন্স</div>
+              <div class="dash-balance-num" id="dashBalance">৳০</div>
+              <div class="dash-sub">Vault • সঞ্চয় ও তহবিল</div>
+            </div>
+            <div class="card dash-txn-card">
+              <div class="dash-txn-head">
+                <span>সাম্প্রতিক লেনদেন</span>
+              </div>
+              <div id="dashRecentTxns"></div>
+            </div>
+          </div>
+
+          <div class="sdash-report-row" id="sdashReportRow"></div>
+
+          <div id="sdashMembers">
+            <div class="summary-row">
+              <div class="stat-card"><div class="num mono" id="sumMembers">০</div><div class="lbl">মোট সদস্য</div></div>
+              <div class="stat-card"><div class="num mono paid" id="sumPaid">৳০</div><div class="lbl">মোট জমা</div></div>
+              <div class="stat-card"><div class="num mono due" id="sumDue">৳০</div><div class="lbl">মোট বকেয়া</div></div>
+            </div>
+            <div class="search-bar"><input type="text" id="memberSearch" placeholder="নাম দিয়ে খুঁজুন..."></div>
+            <p style="color:var(--ink-soft); font-size:.85rem; margin:-6px 0 12px;">💡 কোনো সদস্যের নামে ক্লিক করলে তার মাসভিত্তিক হিসাব ও এডিট ফর্ম খুলে দেখা যাবে।</p>
+            <div class="card table-wrap">
+              <table>
+                <thead><tr><th>সদস্যের নাম</th><th>Member ID</th><th>মাসিক চাঁদা</th><th>মোট জমা</th><th>বকেয়া</th><th>স্ট্যাটাস</th></tr></thead>
+                <tbody id="accountsBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -556,6 +661,39 @@ function render(){
 
 let fetchedMembers = []; // এডমিন লগইন করলে Firestore থেকে আনা পূর্ণ ডেটা এখানে থাকবে
 
+function renderDashboard(list){
+  document.getElementById('dashBalance').textContent = money(SOMITI_DATA.totalBalance);
+
+  // আজকের রিপোর্ট (এখনো দৈনিক লেনদেনের আলাদা রেকর্ড রাখা হয় না, তাই আপাতত ৳০)
+  const reportPills = [
+    ['আজকের সংগ্রহ', 0, 'green'],
+    ['বিতরণ (ঋণ/উত্তোলন)', 0, 'amber'],
+    ['অফিস খরচ', 0, 'red'],
+    ['আজকের লাভ', 0, 'green'],
+    ['লেট ফি/জরিমানা', 0, 'amber'],
+    ['আজকের নিট ক্যাশ', 0, '']
+  ];
+  document.getElementById('sdashReportRow').innerHTML = reportPills.map(([label, val, cls]) => `
+    <div class="sdash-pill ${cls}"><div class="pnum">${money(val)}</div><div class="plbl">${label}</div></div>
+  `).join('');
+
+  // প্রতি সদস্যের সবশেষ যোগ হওয়া এন্ট্রিটা নিয়ে "সাম্প্রতিক লেনদেন" লিস্ট বানানো হচ্ছে
+  const recent = list
+    .filter(m => m.history && m.history.length > 0)
+    .map(m => ({ name: m.name, entry: m.history[m.history.length - 1] }))
+    .slice(0, 6);
+
+  document.getElementById('dashRecentTxns').innerHTML = recent.length ? recent.map(r => `
+    <div class="dash-txn-row">
+      <div class="txn-icon ${r.entry.status}">${r.entry.status === 'due' ? '!' : '৳'}</div>
+      <div>
+        <div class="dash-txn-name">${r.name}</div>
+        <div class="dash-txn-sub">${r.entry.month} — মাসিক চাঁদা</div>
+      </div>
+      <div class="dash-txn-amt ${r.entry.status}">${money(r.entry.paid)}</div>
+    </div>`).join('') : '<div style="color:var(--ink-soft); font-size:.85rem; padding:10px 0;">এখনো কোনো লেনদেন নেই।</div>';
+}
+
 function renderAdminTable(list){
   const totalPaid = list.reduce((s,m)=>s+memberTotals(m).totalPaid,0);
   const totalDue = list.reduce((s,m)=>s+memberTotals(m).due,0);
@@ -578,11 +716,100 @@ function renderAdminTable(list){
     </tr>
     <tr class="history-rows hidden" data-parent="${m.id}">
       <td colspan="6" style="padding:0;">
-        <div class="profile-mini">${profileFieldsHTML(m)}</div>
+        <div class="edit-panel">
+          <div class="edit-panel-title">প্রোফাইল এডিট করুন</div>
+          <div class="edit-grid">
+            <label>নাম<input type="text" id="ef-name-${m.id}" value="${m.name||''}"></label>
+            <label>ইমেইল<input type="email" id="ef-email-${m.id}" value="${m.email||''}"></label>
+            <label>মাসিক চাঁদা<input type="number" id="ef-monthly-${m.id}" value="${m.monthly||0}"></label>
+            <label>মোবাইল<input type="text" id="ef-mobile-${m.id}" value="${m.mobile||''}"></label>
+            <label>পিতার নাম<input type="text" id="ef-father-${m.id}" value="${m.father||''}"></label>
+            <label>মাতার নাম<input type="text" id="ef-mother-${m.id}" value="${m.mother||''}"></label>
+            <label>জন্মতারিখ<input type="text" id="ef-dob-${m.id}" value="${m.dob||''}"></label>
+            <label>নমিনি<input type="text" id="ef-nominee-${m.id}" value="${m.nominee||''}"></label>
+            <label style="grid-column:1/-1;">ঠিকানা<input type="text" id="ef-address-${m.id}" value="${m.address||''}"></label>
+          </div>
+          <button class="edit-save-btn" data-save-id="${m.id}">✅ প্রোফাইল সংরক্ষণ করুন</button>
+          <span class="edit-status" id="ef-status-${m.id}"></span>
+        </div>
+
+        <div class="edit-panel">
+          <div class="edit-panel-title">এই মাসের চাঁদা যোগ করুন</div>
+          <div class="edit-grid">
+            <label>মাস<input type="text" id="mo-month-${m.id}" placeholder="যেমন: অক্টোবর ২০২৬"></label>
+            <label>টাকার পরিমাণ<input type="number" id="mo-paid-${m.id}" value="${m.monthly||0}"></label>
+            <label>স্ট্যাটাস
+              <select id="mo-status-${m.id}">
+                <option value="paid">পরিশোধিত</option>
+                <option value="due">বকেয়া</option>
+                <option value="partial">আংশিক</option>
+              </select>
+            </label>
+          </div>
+          <button class="edit-save-btn" data-addmonth-id="${m.id}">➕ মাস যোগ করুন</button>
+          <span class="edit-status" id="mo-status-msg-${m.id}"></span>
+        </div>
+
         <table style="width:100%; margin:0;"><tbody>${historyRows}</tbody></table>
       </td>
     </tr>`;
   }).join('');
+
+  // প্রোফাইল সেভ বাটন
+  document.querySelectorAll('.edit-save-btn[data-save-id]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const id = btn.dataset.saveId;
+      const statusEl = document.getElementById('ef-status-' + id);
+      statusEl.textContent = 'সংরক্ষণ হচ্ছে...';
+      try{
+        await db.collection('members').doc(id).update({
+          name: document.getElementById('ef-name-'+id).value.trim(),
+          email: document.getElementById('ef-email-'+id).value.trim(),
+          monthly: Number(document.getElementById('ef-monthly-'+id).value) || 0,
+          mobile: document.getElementById('ef-mobile-'+id).value.trim(),
+          father: document.getElementById('ef-father-'+id).value.trim(),
+          mother: document.getElementById('ef-mother-'+id).value.trim(),
+          dob: document.getElementById('ef-dob-'+id).value.trim(),
+          nominee: document.getElementById('ef-nominee-'+id).value.trim(),
+          address: document.getElementById('ef-address-'+id).value.trim()
+        });
+        statusEl.textContent = '✅ সংরক্ষিত হয়েছে!';
+        const snapshot = await db.collection('members').get();
+        fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAdminTable(fetchedMembers);
+        renderDashboard(fetchedMembers);
+      }catch(err){
+        statusEl.textContent = '❌ সমস্যা হয়েছে: ' + err.message;
+      }
+    });
+  });
+
+  // মাস যোগ করার বাটন
+  document.querySelectorAll('.edit-save-btn[data-addmonth-id]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const id = btn.dataset.addmonthId;
+      const statusEl = document.getElementById('mo-status-msg-' + id);
+      const month = document.getElementById('mo-month-'+id).value.trim();
+      const paid = Number(document.getElementById('mo-paid-'+id).value) || 0;
+      const status = document.getElementById('mo-status-'+id).value;
+      if(!month){ statusEl.textContent = '⚠️ মাসের নাম লিখুন।'; return; }
+      statusEl.textContent = 'যোগ হচ্ছে...';
+      try{
+        await db.collection('members').doc(id).update({
+          history: firebase.firestore.FieldValue.arrayUnion({ month, paid, status })
+        });
+        statusEl.textContent = '✅ যোগ হয়েছে!';
+        const snapshot = await db.collection('members').get();
+        fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAdminTable(fetchedMembers);
+        renderDashboard(fetchedMembers);
+      }catch(err){
+        statusEl.textContent = '❌ সমস্যা হয়েছে: ' + err.message;
+      }
+    });
+  });
 
   // ক্লিক করলে নাম-প্রতি মাসের হিসাব খুলবে/বন্ধ হবে
   document.querySelectorAll('#accountsBody tr.member-row').forEach(row => {
@@ -683,6 +910,7 @@ auth.onAuthStateChanged(async user => {
       fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       adminView.classList.remove('hidden');
       renderAdminTable(fetchedMembers);
+      renderDashboard(fetchedMembers);
     }catch(err){
       loginGate.classList.remove('hidden');
       loginError.textContent = 'ডেটা আনতে সমস্যা হয়েছে: ' + err.message;
@@ -703,6 +931,21 @@ auth.onAuthStateChanged(async user => {
   }catch(err){
     noMatchView.classList.remove('hidden');
   }
+});
+
+// সাইডবার মেনু: বানানো সেকশনে স্ক্রল করবে, বাকিগুলোতে "শীঘ্রই আসছে" দেখাবে
+document.querySelectorAll('.sdash-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(link.dataset.soon){
+      alert('এই ফিচারটি এখনো তৈরি হয়নি — শীঘ্রই যোগ করা হবে। 🙂');
+      return;
+    }
+    document.querySelectorAll('.sdash-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    const target = document.getElementById(link.dataset.scroll);
+    if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+  });
 });
 
 render();
