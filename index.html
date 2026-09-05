@@ -1,0 +1,1243 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TEAM PATHAN TRUST & UNITY SOCIETY</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+Da+2:wght@500;600;700;800&family=Hind+Siliguri:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<!-- Firebase (লগইন সিস্টেমের জন্য) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<style>
+  :root{
+    --paper:#FBF7EF;
+    --paper-2:#F3ECDD;
+    --ink:#211F2E;
+    --ink-soft:#514E63;
+    --nil:#28306B;
+    --nil-deep:#1B2150;
+    --gold:#C79A2B;
+    --gold-soft:#E9CE84;
+    --paid:#3F7D58;
+    --due:#B23A48;
+    --partial:#8A6A16;
+    --line: rgba(33,31,46,0.12);
+    --radius: 14px;
+    --shadow: 0 10px 30px rgba(27,33,80,0.10);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Hind Siliguri', sans-serif;
+    line-height:1.6;
+  }
+  h1,h2,h3, .display{
+    font-family:'Baloo Da 2', sans-serif;
+    color:var(--nil-deep);
+    margin:0;
+  }
+  .mono{ font-family:'JetBrains Mono', monospace; }
+  a{color:inherit; text-decoration:none;}
+  button{font-family:inherit;}
+  input, textarea, select{ font-family:'Hind Siliguri',sans-serif; }
+
+  /* ---------- Alpona signature motif ---------- */
+  .alpona-divider{ width:100%; height:34px; display:block; margin:0 auto; }
+  .alpona-divider path{ fill:none; stroke:var(--gold); stroke-width:2; }
+  .alpona-divider circle{ fill:var(--gold); }
+
+  /* ---------- Header / Nav ---------- */
+  header{
+    position:sticky; top:0; z-index:50;
+    background: linear-gradient(180deg, var(--nil-deep), var(--nil) 85%);
+    color:#F6F1E3;
+    box-shadow: var(--shadow);
+  }
+  .header-inner{
+    max-width:1120px; margin:0 auto;
+    padding: 14px 20px;
+    display:flex; align-items:center; justify-content:space-between;
+    gap:16px; flex-wrap:nowrap;
+    position: relative;
+  }
+  .brand{ display:flex; align-items:center; gap:12px; }
+  .brand-mark{
+    width:44px; height:44px; border-radius:50%;
+    background: radial-gradient(circle at 35% 30%, var(--gold-soft), var(--gold) 70%);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Baloo Da 2', sans-serif; font-weight:800; color:var(--nil-deep);
+    font-size:20px; flex-shrink:0;
+  }
+  .brand-text .name{ font-family:'Baloo Da 2', sans-serif; font-weight:700; font-size:1.2rem; letter-spacing:.2px; }
+  .brand-text .tag{ font-size:.76rem; color:#D9CFAE; }
+
+  /* Hamburger Menu Toggle Button */
+  .menu-toggle {
+    display: none;
+    background: transparent;
+    border: none;
+    color: var(--gold-soft);
+    font-size: 28px;
+    cursor: pointer;
+    line-height: 1;
+    padding: 0 4px;
+  }
+
+  nav{ display:flex; gap:3px; flex-wrap:wrap; }
+  nav button{
+    background:transparent; border:1px solid transparent;
+    color:#EDE6D0; padding:8px 12px; border-radius:999px;
+    font-size:.88rem; cursor:pointer; transition:.18s; white-space:nowrap;
+  }
+  nav button:hover{ background:rgba(255,255,255,0.08); }
+  nav button.active{ background: var(--gold); color:var(--nil-deep); font-weight:700; border-color:var(--gold); }
+  nav button:focus-visible, button:focus-visible, input:focus-visible{ outline:3px solid var(--gold-soft); outline-offset:2px; }
+
+  /* CTA Button Header */
+  .cta-btn-nav {
+    background: var(--gold) !important;
+    color: var(--nil-deep) !important;
+    font-weight: 700 !important;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero{ max-width:1120px; margin:0 auto; padding:56px 20px 30px; display:grid; grid-template-columns: 1.1fr .9fr; gap:40px; align-items:center; }
+  .hero .eyebrow{ display:inline-block; font-size:.8rem; letter-spacing:.14em; color:var(--nil); background:var(--gold-soft); padding:5px 12px; border-radius:999px; margin-bottom:14px; font-weight:600; }
+  .hero h1{ font-size:2.4rem; line-height:1.25; margin-bottom:14px; }
+  .hero p{ color:var(--ink-soft); font-size:1.02rem; max-width:50ch; }
+  .hero-stats{ display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:26px; }
+  .stat-card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); padding:16px 18px; box-shadow:var(--shadow); }
+  .stat-card .num{ font-family:'JetBrains Mono',monospace; font-size:1.4rem; font-weight:700; color:var(--nil); }
+  .stat-card .lbl{ font-size:.8rem; color:var(--ink-soft); margin-top:2px; }
+
+  .hero-cta-box { margin-top: 24px; display: flex; gap: 12px; flex-wrap: wrap; }
+  .btn-primary { background: var(--nil); color: #fff; padding: 12px 24px; border-radius: 999px; border: none; font-weight: 600; cursor: pointer; display: inline-block; transition: .2s; }
+  .btn-primary:hover { background: var(--nil-deep); }
+
+  .hero-art{
+    background: radial-gradient(circle at 30% 20%, var(--gold-soft), transparent 60%), radial-gradient(circle at 75% 75%, #AEB9E8, transparent 55%), var(--nil-deep);
+    border-radius: 24px; aspect-ratio: 1/1; display:flex; align-items:center; justify-content:center; box-shadow: var(--shadow); position:relative; overflow:hidden;
+  }
+  .hero-art svg{ width:72%; height:72%; }
+
+  section{ max-width:1120px; margin:0 auto; padding:30px 20px 70px; }
+  .section-head{ margin-bottom:26px; }
+  .section-head .eyebrow{ font-size:.8rem; letter-spacing:.12em; color:var(--nil); font-weight:600; }
+  .section-head h2{ font-size:1.6rem; margin-top:6px; }
+  .hidden{ display:none !important; }
+
+  .card{ background:#fff; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+
+  /* notices */
+  .notice-list{ display:flex; flex-direction:column; gap:14px; }
+  .notice{ padding:18px 20px; display:flex; gap:16px; align-items:flex-start; }
+  .notice .date{ font-family:'JetBrains Mono',monospace; font-size:.78rem; background:var(--paper-2); color:var(--nil); padding:4px 10px; border-radius:8px; white-space:nowrap; flex-shrink:0; margin-top:2px; }
+  .notice h3{ font-size:1.02rem; margin-bottom:4px; }
+  .notice p{ color:var(--ink-soft); font-size:.92rem; margin:0; }
+
+  /* members (public list) */
+  .member-grid{ display:grid; grid-template-columns:repeat(auto-fill, minmax(230px,1fr)); gap:14px; }
+  .member-card{ padding:16px 18px; display:flex; align-items:center; gap:12px; }
+  .avatar{ width:42px; height:42px; border-radius:50%; flex-shrink:0; background:linear-gradient(135deg, var(--nil), var(--nil-deep)); color:#F6F1E3; display:flex; align-items:center; justify-content:center; font-family:'Baloo Da 2',sans-serif; font-weight:700; }
+  .member-card .role{ font-size:.76rem; color:var(--gold); font-weight:600; font-family:'JetBrains Mono',monospace; }
+  .member-card .mname{ font-weight:600; }
+
+  /* rules */
+  .rules-list{ display:flex; flex-direction:column; gap:0; }
+  .rule-item{ display:flex; gap:16px; padding:16px 20px; border-bottom:1px solid var(--line); }
+  .rule-item:last-child{ border-bottom:none; }
+  .rule-num{ font-family:'Baloo Da 2',sans-serif; font-weight:700; color:var(--gold); font-size:1.1rem; flex-shrink:0; min-width:28px; }
+
+  /* accounts */
+  .summary-row{ display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:24px; }
+  .summary-row .stat-card .num.paid{ color:var(--paid); }
+  .summary-row .stat-card .num.due{ color:var(--due); }
+
+  .table-wrap{ overflow-x:auto; border-radius:var(--radius); }
+  table{ width:100%; border-collapse:collapse; min-width:640px; }
+  thead th{ text-align:right; font-size:.82rem; font-weight:600; color:#fff; background:var(--nil); padding:12px 14px; white-space:nowrap; }
+  thead th:first-child{ text-align:left; border-radius:var(--radius) 0 0 0; }
+  thead th:last-child{ border-radius:0 var(--radius) 0 0; }
+  tbody td{ padding:11px 14px; border-bottom:1px solid var(--line); font-size:.92rem; text-align:right; }
+  tbody td:first-child{ text-align:left; font-weight:600; }
+  tbody tr:last-child td{ border-bottom:none; }
+  tbody tr:hover{ background:var(--paper-2); }
+  tr.member-row:hover td:first-child{ color:var(--nil); font-weight:700; }
+  tr.sub-row td{ border-bottom:1px solid var(--line); font-size:.85rem; }
+  tr.history-rows table{ border-collapse:collapse; }
+  .amt{ font-family:'JetBrains Mono',monospace; }
+  .status{ display:inline-block; padding:3px 10px; border-radius:999px; font-size:.78rem; font-weight:600; }
+  .status.paid{ background:#E3F1E7; color:var(--paid); }
+  .status.due{ background:#F8E4E6; color:var(--due); }
+  .status.partial{ background:#FBF0D6; color:var(--partial); }
+
+  .search-bar{ display:flex; gap:10px; margin-bottom:18px; flex-wrap:wrap; }
+  .search-bar input{ flex:1; min-width:200px; padding:11px 16px; border-radius:999px; border:1px solid var(--line); font-size:.95rem; background:#fff; }
+
+  .my-summary{ display:flex; align-items:center; gap:16px; padding:22px 24px; margin-bottom:22px; flex-wrap:wrap; }
+  .my-summary .avatar{ width:56px; height:56px; font-size:1.3rem; }
+  .my-summary .mid{ font-family:'JetBrains Mono',monospace; font-size:.8rem; color:var(--ink-soft); }
+
+  .profile-hero{ display:flex; align-items:center; gap:18px; padding:24px; margin-bottom:22px; flex-wrap:wrap; }
+  .profile-hero-avatar{ width:72px; height:72px; font-size:1.6rem; flex-shrink:0; }
+  .profile-hero-info{ flex:1; min-width:180px; }
+  .profile-hero-name{ font-weight:700; font-size:1.25rem; color:var(--nil-deep); }
+  .profile-hero-mobile{ font-size:.88rem; color:var(--ink-soft); margin-top:2px; }
+  .profile-hero .mid{ font-family:'JetBrains Mono',monospace; font-size:.78rem; color:var(--ink-soft); margin-top:4px; }
+  .profile-hero-status{ margin-left:auto; }
+
+  .txn-row{ display:flex; align-items:center; gap:14px; padding:14px 20px; border-bottom:1px solid var(--line); }
+  .txn-row:last-child{ border-bottom:none; }
+  .txn-icon{ width:38px; height:38px; border-radius:50%; flex-shrink:0; display:flex; align-items:center; justify-content:center; font-weight:700; font-family:'Baloo Da 2',sans-serif; }
+  .txn-icon.paid{ background:#E3F1E7; color:var(--paid); }
+  .txn-icon.due{ background:#F8E4E6; color:var(--due); }
+  .txn-title{ font-weight:600; font-size:.95rem; }
+  .txn-date{ font-size:.78rem; color:var(--ink-soft); margin-top:1px; }
+  .txn-amt{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-weight:700; }
+  .txn-amt.paid{ color:var(--paid); }
+  .txn-amt.due{ color:var(--due); }
+  .avatar img{ width:100%; height:100%; object-fit:cover; border-radius:50%; }
+  .profile-row{ display:flex; gap:14px; font-size:.92rem; border-bottom:1px solid var(--line); padding-bottom:8px; }
+  .profile-row:last-child{ border-bottom:none; padding-bottom:0; }
+  .profile-row b{ min-width:120px; color:var(--nil); flex-shrink:0; }
+  .profile-mini{ padding:14px 18px; background:var(--paper-2); font-size:.85rem; }
+  .profile-mini .profile-row{ border-bottom:1px solid var(--line); padding:6px 0; }
+
+  .edit-panel{ background:var(--paper-2); padding:16px 18px; border-bottom:1px solid var(--line); }
+  .edit-panel-title{ font-weight:700; font-size:.85rem; color:var(--nil); margin-bottom:10px; }
+  .edit-grid{ display:grid; grid-template-columns:repeat(auto-fit, minmax(160px,1fr)); gap:10px; margin-bottom:12px; }
+  .edit-grid label{ display:flex; flex-direction:column; gap:4px; font-size:.78rem; color:var(--ink-soft); }
+  .edit-grid input, .edit-grid select{ padding:8px 10px; border-radius:8px; border:1px solid var(--line); font-size:.88rem; font-family:'Hind Siliguri',sans-serif; background:#fff; }
+  .edit-save-btn{ padding:8px 16px; border-radius:999px; border:none; background:var(--nil); color:#fff; font-weight:600; cursor:pointer; font-size:.82rem; }
+  .edit-status{ margin-left:10px; font-size:.8rem; color:var(--ink-soft); }
+  .hist-icon-btn{ border:none; background:transparent; cursor:pointer; font-size:.9rem; padding:2px 4px; border-radius:6px; }
+  .hist-icon-btn:hover{ background:var(--line); }
+
+  .dash-grid{ display:grid; grid-template-columns:1fr 1.3fr; gap:16px; margin-bottom:22px; }
+  .dash-balance-card{ background:linear-gradient(135deg, var(--nil), var(--nil-deep)); color:#fff; padding:24px; display:flex; flex-direction:column; justify-content:center; }
+  .dash-label{ font-size:.8rem; color:#C9D0EE; margin-bottom:6px; }
+  .dash-balance-num{ font-family:'JetBrains Mono',monospace; font-size:2rem; font-weight:700; }
+  .dash-sub{ font-size:.76rem; color:#9FA9D9; margin-top:6px; }
+  .dash-txn-card{ padding:18px 20px; }
+  .dash-txn-head{ font-weight:700; font-size:.9rem; color:var(--nil-deep); margin-bottom:10px; }
+  .dash-txn-row{ display:flex; align-items:center; gap:12px; padding:9px 0; border-bottom:1px solid var(--line); }
+  .dash-txn-row:last-child{ border-bottom:none; }
+  .dash-txn-row .txn-icon{ width:32px; height:32px; font-size:.85rem; }
+  .dash-txn-name{ font-weight:600; font-size:.88rem; }
+  .dash-txn-sub{ font-size:.74rem; color:var(--ink-soft); }
+  .dash-txn-amt{ margin-left:auto; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:.88rem; }
+  @media (max-width:760px){ .dash-grid{ grid-template-columns:1fr; } }
+
+  /* ---- সাইডবার ড্যাশবোর্ড লেআউট ---- */
+  .sdash-wrap{ display:flex; gap:20px; align-items:flex-start; }
+  .sdash-sidebar{
+    width:210px; flex-shrink:0; background:var(--nil-deep); border-radius:var(--radius);
+    padding:14px 10px; display:flex; flex-direction:column; gap:2px;
+    position:sticky; top:80px;
+  }
+  .sdash-side-title{ color:#8791C4; font-size:.7rem; text-transform:uppercase; letter-spacing:.08em; padding:8px 10px 4px; }
+  .sdash-link{
+    display:block; color:#E3E7F8; text-decoration:none; font-size:.85rem;
+    padding:9px 10px; border-radius:8px; transition:.15s;
+  }
+  .sdash-link:hover{ background:rgba(255,255,255,0.08); }
+  .sdash-link.active{ background:var(--gold); color:var(--nil-deep); font-weight:700; }
+  .sdash-link.soon{ color:#7C86B8; }
+  .sdash-main{ flex:1; min-width:0; }
+
+  .sdash-report-row{
+    display:grid; grid-template-columns:repeat(6,1fr); gap:10px; margin-bottom:24px;
+  }
+  .sdash-pill{
+    background:#fff; border:1px solid var(--line); border-radius:12px; padding:14px 12px; text-align:center;
+  }
+  .sdash-pill .pnum{ font-family:'JetBrains Mono',monospace; font-weight:700; font-size:1.05rem; }
+  .sdash-pill .plbl{ font-size:.7rem; color:var(--ink-soft); margin-top:4px; }
+  .sdash-pill.green .pnum{ color:var(--paid); }
+  .sdash-pill.amber .pnum{ color:#B8860B; }
+  .sdash-pill.red .pnum{ color:var(--due); }
+
+  /* Form Styles */
+  .form-group { display: flex; flex-direction: column; gap: 6px; margin-bottom: 14px; }
+  .form-group label { font-weight: 600; font-size: .9rem; }
+  .form-group input, .form-group textarea { padding: 10px 14px; border-radius: 8px; border: 1px solid var(--line); font-size: .95rem; }
+
+  @media (max-width:900px){
+    .sdash-wrap{ flex-direction:column; }
+    .sdash-sidebar{
+      width:100%; position:static; flex-direction:row; overflow-x:auto; gap:4px; padding:10px;
+    }
+    .sdash-side-title{ display:none; }
+    .sdash-link{ white-space:nowrap; flex-shrink:0; }
+    .sdash-report-row{ grid-template-columns:repeat(2,1fr); }
+  }
+
+  #contact .card{ padding:26px; display:grid; gap:10px; }
+  #contact .row{ display:flex; gap:10px; font-size:.95rem; }
+  #contact .row b{ min-width:110px; color:var(--nil); }
+
+  footer{ background:var(--nil-deep); color:#D9CFAE; text-align:center; padding:34px 20px; font-size:.88rem; }
+  footer .fname{ font-family:'Baloo Da 2',sans-serif; color:#fff; font-size:1.1rem; margin-bottom:6px;}
+
+  /* Responsive Navigation Styles */
+  @media (max-width: 760px){
+    .menu-toggle { display: block; }
+    nav {
+      display: none;
+      flex-direction: column;
+      position: absolute;
+      top: 100%;
+      left: 0;
+      width: 100%;
+      background: var(--nil-deep);
+      padding: 16px 20px;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+      gap: 8px;
+    }
+    nav.open { display: flex; }
+    nav button { width: 100%; text-align: left; border-radius: 8px; }
+
+    .hero{ grid-template-columns:1fr; padding-top:34px; }
+    .hero h1{ font-size:1.8rem; }
+    .hero-art{ order:-1; max-width:240px; margin:0 auto; }
+    .summary-row{ grid-template-columns:1fr; }
+    .hero-stats{ grid-template-columns:1fr 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } *{ transition:none !important; } }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="brand">
+      <div class="brand-mark">T</div>
+      <div class="brand-text">
+        <div class="name" id="siteTitle">TEAM PATHAN TRUST & UNITY SOCIETY</div>
+        <div class="tag" id="siteTagline">একতাই আমাদের শক্তি</div>
+      </div>
+    </div>
+    <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">☰</button>
+    <nav id="mainNav">
+      <button data-target="home" class="active">হোম</button>
+      <button data-target="members">সদস্য তালিকা</button>
+      <button data-target="accounts">হিসাব ও চাঁদা</button>
+      <button data-target="rules">নিয়মাবলি</button>
+      <button data-target="notices">নোটিশ</button>
+      <button data-target="contact">যোগাযোগ</button>
+      <button data-target="apply" class="cta-btn-nav">আবেদন করুন</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- ===================== HOME ===================== -->
+  <section id="home">
+    <div class="hero">
+      <div>
+        <span class="eyebrow" id="heroYear">প্রতিষ্ঠাকাল: ২০১৮</span>
+        <h1 id="heroHeading">আমাদের সমিতি, আমাদের সঞ্চয়, আমাদের ভবিষ্যৎ</h1>
+        <p id="heroObjective">সদস্যদের পারস্পরিক সহযোগিতা ও নিয়মিত চাঁদার মাধ্যমে গড়ে ওঠা একটি স্বনির্ভর সমবায় সংগঠন।</p>
+        <div class="hero-stats">
+          <div class="stat-card"><div class="num mono" id="statMembers">০</div><div class="lbl">মোট সদস্য</div></div>
+          <div class="stat-card"><div class="num mono" id="statBalance">৳০</div><div class="lbl">সমিতির মোট ব্যালেন্স</div></div>
+        </div>
+        <div class="hero-cta-box">
+          <button class="btn-primary" onclick="navigateToSection('apply')">সদস্য পদের আবেদন</button>
+        </div>
+      </div>
+      <div class="hero-art">
+        <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="100" cy="100" r="70" fill="none" stroke="#E9CE84" stroke-width="2"/>
+          <circle cx="100" cy="100" r="50" fill="none" stroke="#E9CE84" stroke-width="1.4" stroke-dasharray="4 6"/>
+          <g fill="none" stroke="#E9CE84" stroke-width="2">
+            <path d="M100 30 C120 55 120 75 100 100 C80 75 80 55 100 30 Z"/>
+            <path d="M100 170 C120 145 120 125 100 100 C80 125 80 145 100 170 Z"/>
+            <path d="M30 100 C55 80 75 80 100 100 C75 120 55 120 30 100 Z"/>
+            <path d="M170 100 C145 80 125 80 100 100 C125 120 145 120 170 100 Z"/>
+          </g>
+          <circle cx="100" cy="100" r="10" fill="#E9CE84"/>
+        </svg>
+      </div>
+    </div>
+    <svg class="alpona-divider" viewBox="0 0 400 34">
+      <path d="M0 17 Q 20 2, 40 17 T 80 17 T 120 17 T 160 17 T 200 17 T 240 17 T 280 17 T 320 17 T 360 17 T 400 17"/>
+      <circle cx="20" cy="17" r="3"/><circle cx="100" cy="17" r="3"/><circle cx="180" cy="17" r="3"/>
+      <circle cx="260" cy="17" r="3"/><circle cx="340" cy="17" r="3"/>
+    </svg>
+  </section>
+
+  <!-- ===================== MEMBERS (পাবলিক - শুধু নাম ও আইডি) ===================== -->
+  <section id="members" class="hidden">
+    <div class="section-head">
+      <div class="eyebrow">সমিতির শক্তি</div>
+      <h2>সদস্য তালিকা</h2>
+    </div>
+    <div class="member-grid" id="memberGrid"></div>
+  </section>
+
+  <!-- ===================== ACCOUNTS (লগইন সুরক্ষিত) ===================== -->
+  <section id="accounts" class="hidden">
+    <div class="section-head">
+      <div class="eyebrow">হিসাব-নিকাশ</div>
+      <h2>চাঁদা, পেমেন্ট স্ট্যাটাস ও মাসিক হিসাব</h2>
+    </div>
+
+    <!-- লগইন গেট -->
+    <div id="loginGate" class="card" style="max-width:420px; padding:30px; margin:0 auto;">
+      <h3 style="margin-bottom:6px;">লগইন করুন</h3>
+      <p style="color:var(--ink-soft); font-size:.9rem; margin-bottom:18px;">নিজের চাঁদা ও পেমেন্ট স্ট্যাটাস দেখতে আপনার ইমেইল ও পাসওয়ার্ড দিয়ে লগইন করুন।</p>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <input type="email" id="loginEmail" placeholder="ইমেইল" style="padding:11px 16px; border-radius:10px; border:1px solid var(--line); font-size:.95rem;">
+        <input type="password" id="loginPassword" placeholder="পাসওয়ার্ড" style="padding:11px 16px; border-radius:10px; border:1px solid var(--line); font-size:.95rem;">
+        <button id="loginBtn" style="padding:11px 16px; border-radius:10px; border:none; background:var(--nil); color:#fff; font-weight:600; cursor:pointer; font-size:.95rem;">লগইন করুন</button>
+        <p id="loginError" style="color:var(--due); font-size:.85rem; min-height:1.2em; margin:0;"></p>
+      </div>
+    </div>
+
+    <!-- লগইন করার পর: এডমিন ভিউ (সবার হিসাব) -->
+    <div id="adminView" class="hidden">
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+        <span style="font-size:.85rem; color:var(--ink-soft);">কমিটি হিসেবে লগইন করা আছেন — সব সদস্যের হিসাব দেখা যাচ্ছে</span>
+        <button id="logoutBtnAdmin" style="padding:8px 16px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:.85rem;">লগআউট</button>
+      </div>
+
+      <div class="sdash-wrap">
+        <!-- সাইডবার -->
+        <nav class="sdash-sidebar">
+          <div class="sdash-side-title">মেনু</div>
+          <a href="#sdashTop" class="sdash-link active" data-scroll="sdashTop">📊 ড্যাশবোর্ড</a>
+          <a href="#sdashMembers" class="sdash-link" data-scroll="sdashMembers">👥 সব সদস্য</a>
+          <div class="sdash-side-title" style="margin-top:14px;">শীঘ্রই আসছে</div>
+          <a href="#sdashTransactions" class="sdash-link" data-scroll="sdashTransactions">💰 লেনদেন ও কিস্তি</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🏦 সঞ্চয় স্কিম</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📜 নমিনি ও উত্তরাধিকার</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📝 চুক্তি ও স্ট্যাম্প</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📈 রিপোর্ট ও অডিট</a>
+          <a href="#" class="sdash-link soon" data-soon="1">💵 আয়-ব্যয়</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🏧 ব্যাংক ও ক্যাশ ভল্ট</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🧑‍💼 স্টাফ ও ইউজার</a>
+          <a href="#" class="sdash-link soon" data-soon="1">📤 এক্সেল ইমপোর্ট/এক্সপোর্ট</a>
+          <a href="#" class="sdash-link soon" data-soon="1">🧾 রিসিট ও প্রিন্ট</a>
+        </nav>
+
+        <!-- মূল কনটেন্ট -->
+        <div class="sdash-main">
+          <div id="sdashTop"></div>
+          <div class="dash-grid">
+            <div class="card dash-balance-card">
+              <div class="dash-label">সমিতির মোট ব্যালেন্স</div>
+              <div class="dash-balance-num" id="dashBalance">৳০</div>
+              <div class="dash-sub">Vault • সঞ্চয় ও তহবিল</div>
+            </div>
+            <div class="card dash-txn-card">
+              <div class="dash-txn-head">
+                <span>সাম্প্রতিক লেনদেন</span>
+              </div>
+              <div id="dashRecentTxns"></div>
+            </div>
+          </div>
+
+          <div class="sdash-report-row" id="sdashReportRow"></div>
+
+          <div id="sdashMembers">
+            <div class="summary-row">
+              <div class="stat-card"><div class="num mono" id="sumMembers">০</div><div class="lbl">মোট সদস্য</div></div>
+              <div class="stat-card"><div class="num mono paid" id="sumPaid">৳০</div><div class="lbl">মোট জমা</div></div>
+              <div class="stat-card"><div class="num mono due" id="sumDue">৳০</div><div class="lbl">মোট বকেয়া</div></div>
+            </div>
+            <div class="search-bar"><input type="text" id="memberSearch" placeholder="নাম দিয়ে খুঁজুন..."></div>
+            <p style="color:var(--ink-soft); font-size:.85rem; margin:-6px 0 12px;">💡 কোনো সদস্যের নামে ক্লিক করলে তার মাসভিত্তিক হিসাব ও এডিট ফর্ম খুলে দেখা যাবে।</p>
+            <div class="card table-wrap">
+              <table>
+                <thead><tr><th>সদস্যের নাম</th><th>Member ID</th><th>মাসিক চাঁদা</th><th>মোট জমা</th><th>বকেয়া</th><th>স্ট্যাটাস</th></tr></thead>
+                <tbody id="accountsBody"></tbody>
+              </table>
+            </div>
+          </div>
+
+          <div id="sdashTransactions" style="margin-top:34px;">
+            <div class="section-head" style="margin-bottom:14px;">
+              <h2 style="font-size:1.2rem;">লেনদেন ও কিস্তির তালিকা</h2>
+              <p style="color:var(--ink-soft); font-size:.85rem; margin-top:4px;">সব সদস্যের সব এন্ট্রি একসাথে, একটা তালিকায়।</p>
+            </div>
+            <div class="search-bar"><input type="text" id="txnSearch" placeholder="সদস্যের নাম দিয়ে খুঁজুন..."></div>
+            <div class="card table-wrap">
+              <table>
+                <thead><tr><th>সদস্যের নাম</th><th>মাস</th><th>তারিখ</th><th>মেথড</th><th>টাকা</th><th>স্ট্যাটাস</th></tr></thead>
+                <tbody id="txnLedgerBody"></tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- লগইন করার পর: নিজের ভিউ (শুধু নিজের হিসাব) -->
+    <div id="myView" class="hidden">
+      <div style="display:flex; justify-content:flex-end; margin-bottom:16px;">
+        <button id="logoutBtnMy" style="padding:8px 16px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer; font-size:.85rem;">লগআউট</button>
+      </div>
+
+      <div class="card profile-hero">
+        <div class="avatar profile-hero-avatar" id="myAvatar">?</div>
+        <div class="profile-hero-info">
+          <div class="profile-hero-name" id="myName">-</div>
+          <div class="profile-hero-mobile" id="myMobileLine"></div>
+          <div class="mid" id="myId">Member ID: -</div>
+        </div>
+        <div class="profile-hero-status">
+          <div class="status" id="myStatus">-</div>
+        </div>
+      </div>
+
+      <div class="summary-row">
+        <div class="stat-card"><div class="num mono" id="myMonthly">৳০</div><div class="lbl">মাসিক চাঁদা</div></div>
+        <div class="stat-card"><div class="num mono paid" id="myPaid">৳০</div><div class="lbl">আমার মোট জমা</div></div>
+        <div class="stat-card"><div class="num mono due" id="myDue">৳০</div><div class="lbl">আমার বকেয়া</div></div>
+      </div>
+
+      <div class="section-head" style="margin-top:22px; margin-bottom:14px;"><h2 style="font-size:1.2rem;">গ্রাহকের তথ্য</h2></div>
+      <div class="card" id="myProfileCard" style="padding:20px 24px; display:grid; gap:10px;"></div>
+
+      <div class="section-head" style="margin-top:26px; margin-bottom:14px;"><h2 style="font-size:1.2rem;">সাম্প্রতিক লেনদেন</h2></div>
+      <div class="card" id="myTxnList" style="padding:6px 0;"></div>
+    </div>
+
+    <!-- ইমেইল কোনো সদস্যের সাথে না মিললে -->
+    <div id="noMatchView" class="hidden card" style="padding:26px; text-align:center;">
+      <p style="margin-bottom:14px;">এই ইমেইলের সাথে কোনো সদস্যের তথ্য মেলেনি। দয়া করে কমিটির সাথে যোগাযোগ করুন।</p>
+      <button id="logoutBtnNoMatch" style="padding:9px 18px; border-radius:999px; border:1px solid var(--line); background:#fff; cursor:pointer;">লগআউট</button>
+    </div>
+  </section>
+
+  <!-- ===================== RULES ===================== -->
+  <section id="rules" class="hidden">
+    <div class="section-head">
+      <div class="eyebrow">সংবিধিবদ্ধ</div>
+      <h2>সমিতির নিয়মাবলি</h2>
+    </div>
+    <div class="card rules-list" id="rulesList"></div>
+  </section>
+
+  <!-- ===================== NOTICES ===================== -->
+  <section id="notices" class="hidden">
+    <div class="section-head">
+      <div class="eyebrow">সাম্প্রতিক তথ্য</div>
+      <h2>নোটিশ বোর্ড</h2>
+    </div>
+    <div class="card notice-list" id="noticeList"></div>
+  </section>
+
+  <!-- ===================== APPLY FORM ===================== -->
+  <section id="apply" class="hidden">
+    <div class="section-head">
+      <div class="eyebrow">যুক্ত হন</div>
+      <h2>নতুন সদস্য পদের আবেদন</h2>
+    </div>
+    <div class="card" style="padding:24px; max-width:600px; margin:0 auto;">
+      <form id="applyForm" onsubmit="handleApplySubmit(event)">
+        <div class="form-group">
+          <label for="applicantName">পূর্ণ নাম *</label>
+          <input type="text" id="applicantName" required placeholder="আপনার নাম লিখুন">
+        </div>
+        <div class="form-group">
+          <label for="applicantPhone">ফোন নম্বর *</label>
+          <input type="tel" id="applicantPhone" required placeholder="০১৮XXXXXXXX">
+        </div>
+        <div class="form-group">
+          <label for="applicantAddress">বর্তমান ঠিকানা</label>
+          <textarea id="applicantAddress" rows="3" placeholder="আপনার ঠিকানা লিখুন"></textarea>
+        </div>
+        <button type="submit" class="btn-primary" style="width:100%; margin-top:10px;">আবেদন জমা দিন</button>
+        <p id="applyStatus" style="text-align:center; margin-top:12px; font-size:.9rem; margin-bottom:0;"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- ===================== CONTACT ===================== -->
+  <section id="contact" class="hidden">
+    <div class="section-head">
+      <div class="eyebrow">যোগাযোগ করুন</div>
+      <h2>আমাদের সাথে যোগাযোগ</h2>
+    </div>
+    <div class="card">
+      <div class="row"><b>সভাপতি</b><span id="cPresident">নাম বসান</span></div>
+      <div class="row"><b>সাধারণ সম্পাদক</b><span id="cSecretary">নাম বসান</span></div>
+      <div class="row"><b>কোষাধ্যক্ষ</b><span id="cTreasurer">নাম বসান</span></div>
+      <div class="row"><b>ফোন</b><span id="cPhone">০১XXXXXXXXX</span></div>
+      <div class="row"><b>ঠিকানা</b><span id="cAddress">গ্রাম/এলাকা, উপজেলা, জেলা</span></div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="fname" id="footerName">TEAM PATHAN TRUST & UNITY SOCIETY</div>
+  <div>সততা ও একতার সাথে এগিয়ে চলা</div>
+</footer>
+
+<script>
+/* ================================================================
+   ধাপ ১: Firebase প্রজেক্টের config এখানে বসান
+   ================================================================ */
+const firebaseConfig = {
+  apiKey: "AIzaSyC5fasEsfwXrGUsIhBwueLTzhAI_pFE--s",
+  authDomain: "team-pathan-society.firebaseapp.com",
+  projectId: "team-pathan-society",
+  storageBucket: "team-pathan-society.firebasestorage.app",
+  messagingSenderId: "783629066510",
+  appId: "1:783629066510:web:516b5d02cdc5231666775f"
+};
+firebase.initializeApp(firebaseConfig);
+const auth = firebase.auth();
+const db = firebase.firestore();
+
+/* ================================================================
+   ধাপ ২: কমিটির ইমেইল
+   ================================================================ */
+const ADMIN_EMAILS = [
+  "ziaurrahmansaysob1@gmail.com"
+];
+
+/* ================================================================
+   ধাপ ৩: সমিতির তথ্য
+   ================================================================ */
+const SOMITI_DATA = {
+  name: "TEAM PATHAN TRUST & UNITY SOCIETY",
+  tagline: "TRUST • UNITY • PROSPERITY",
+  founded: "সেপ্টেম্বর ২০২৬",
+  objective: "সঞ্চয়, পারস্পরিক সহযোগিতা, বৈধ বিনিয়োগ এবং সদস্যদের আর্থিক উন্নয়নই এই সমিতির মূল লক্ষ্য।",
+  totalBalance: 2000,
+  contact: {
+    president: "তথ্য শীঘ্রই যোগ করা হবে",
+    secretary: "তথ্য শীঘ্রই যোগ করা হবে",
+    treasurer: "তথ্য শীঘ্রই যোগ করা হবে",
+    phone: "তথ্য শীঘ্রই যোগ করা হবে",
+    address: "তথ্য শীঘ্রই যোগ করা হবে"
+  },
+  rules: [
+    "মাসিক সঞ্চয়: প্রত্যেক সদস্যকে নির্ধারিত মাসিক চাঁদা (Monthly Saving) সময়মতো জমা দিতে হবে।",
+    "ইউনিক সদস্য ID: প্রত্যেক সদস্যের একটি নির্দিষ্ট (Unique) Member ID থাকবে এবং তা পরিবর্তন করা যাবে না।",
+    "সঞ্চয়ের হিসাব: সকল মাসিক পেমেন্টের হিসাব Savings Register-এ সংরক্ষণ করা হবে।",
+    "টাকা উত্তোলনের নোটিশ: কোনো সদস্য টাকা তুলতে চাইলে কমপক্ষে ২ মাস আগে লিখিতভাবে জানাতে হবে।",
+    "২ বছরের আগে উত্তোলন নিষিদ্ধ: কোনো সদস্য ২ বছর পূর্ণ হওয়ার আগে কোনো টাকা উত্তোলন করতে পারবে না।",
+    "২–৩ বছরের মধ্যে উত্তোলন: ২ বছর পূর্ণ হওয়ার পর কিন্তু ৩ বছর পূর্ণ হওয়ার আগে টাকা তুললে শুধুমাত্র নিজের জমাকৃত মূল টাকা ফেরত পাবে; কোনো লাভ (Profit) পাবে না।",
+    "৩ বছর পূর্ণ হলে: সমিতির নির্ধারিত নিয়ম অনুযায়ী সদস্য লাভ (Profit) পাওয়ার যোগ্য হবে।",
+    "সমিতির অর্থের ব্যবহার: সমিতির টাকা কোনো সদস্যের ব্যক্তিগত কাজে ব্যবহার করা যাবে না।",
+    "বড় আর্থিক সিদ্ধান্ত: বড় কোনো আর্থিক সিদ্ধান্ত নেওয়ার আগে সদস্যদের অনুমোদন (Approval) নিতে হবে।",
+    "আর্থিক স্বচ্ছতা: সমিতির সকল আর্থিক হিসাব স্বচ্ছভাবে সংরক্ষণ করতে হবে এবং প্রয়োজন অনুযায়ী সদস্যদের জানাতে হবে।",
+    "সভা ও সিদ্ধান্ত: নিয়মিত সমিতির সভা অনুষ্ঠিত হবে এবং গুরুত্বপূর্ণ সিদ্ধান্ত রেকর্ড করে রাখা হবে।",
+    "সদস্যদের আচরণ: কোনো সদস্য অন্য সদস্যের সাথে অসদাচরণ, ঝামেলা বা অসম্মানজনক আচরণ করতে পারবে না।",
+    "সদস্যপদ বাতিল/প্রস্থান: সমিতি থেকে বের হতে হলে নির্ধারিত পদ্ধতি (Withdrawal Procedure) অনুসরণ করতে হবে।",
+    "নিয়ম পরিবর্তন: প্রয়োজন অনুযায়ী সদস্যদের সংখ্যাগরিষ্ঠ (Majority) অনুমোদনের মাধ্যমে সমিতির নিয়ম পরিবর্তন বা সংশোধন করা যাবে।",
+    "জরুরি প্রয়োজনে ৭০% সুবিধা: জরুরি প্রয়োজনে কোনো সদস্য তার মোট জমাকৃত টাকার সর্বোচ্চ ৭০% পর্যন্ত সাময়িকভাবে নিতে পারবে। প্রয়োজন শেষ হলে সেই টাকা কোনো সুদ/লাভ ছাড়াই পুনরায় সমিতিতে জমা দিতে হবে।"
+  ],
+  notices: [
+    { date: "সেপ্টেম্বর ২০২৬", title: "সমিতি শুরু হয়েছে", body: "TEAM PATHAN TRUST & UNITY SOCIETY আনুষ্ঠানিকভাবে যাত্রা শুরু করেছে। সকল সদস্যকে নিয়মিত চাঁদা পরিশোধের অনুরোধ করা হচ্ছে।" }
+  ],
+  members: [
+    { id: "TP01", name: "ZIAUR RAHMAN" },
+    { id: "TP02", name: "ZIAUR RAHMAN -02" },
+    { id: "TP03", name: "MD SHAH ALAM" },
+    { id: "TP04", name: "MD SHAH ALAM-02" },
+    { id: "TP05", name: "MOHAMMAD JONY" },
+    { id: "TP06", name: "MD JOSIM UDDIN" },
+    { id: "TP07", name: "MOHAMMAD AMIR HAMZA" },
+    { id: "TP08", name: "MOHAMMAD AMIR HAMZA-02" },
+    { id: "TP09", name: "FAKHRUL ISLAM POLASH" },
+    { id: "TP10", name: "AZHARUL ISLAM PIYASH" },
+    { id: "TP11", name: "IMAM HOSSAIN PIYAL" },
+    { id: "TP12", name: "MD SADEK HOSSAIN RIPON" },
+    { id: "TP13", name: "SHAKIL KHAN" },
+    { id: "TP14", name: "OSMAN GONI" },
+    { id: "TP15", name: "JUBAYER HOSEN SAIMUN" },
+    { id: "TP16", name: "JANNATUL FERDOUS JUTHI" },
+    { id: "TP17", name: "MD JOSIM UDDIN-02" },
+    { id: "TP18", name: "MD JOSIM UDDIN-03" },
+    { id: "TP19", name: "MD OMOR FARUK" }
+  ],
+  lastUpdated: "২৭ আগস্ট ২০২৬"
+};
+
+function bn(num){
+  const digits = ['০','১','২','৩','৪','৫','৬','৭','৮','৯'];
+  return String(num).replace(/\d/g, d => digits[d]);
+}
+function money(num){ return '৳' + bn(num.toLocaleString('en-IN')); }
+const statusLabel = { paid:'পরিশোধিত', due:'বকেয়া', partial:'আংশিক' };
+
+function avatarHTML(m, size){
+  if(m.photoUrl){
+    return `<img src="${m.photoUrl}" alt="${m.name}">`;
+  }
+  return (m.name||'?').trim()[0];
+}
+
+function profileFieldsHTML(m){
+  const fields = [
+    ['পিতার নাম', m.father],
+    ['মাতার নাম', m.mother],
+    ['জন্মতারিখ', m.dob],
+    ['ঠিকানা', m.address],
+    ['মোবাইল', m.mobile],
+    ['নমিনি', m.nominee]
+  ].filter(([label, value]) => value && String(value).trim() !== '');
+  if(fields.length === 0){
+    return '<div class="profile-row" style="color:var(--ink-soft);">এখনো কোনো অতিরিক্ত তথ্য যোগ করা হয়নি।</div>';
+  }
+  return fields.map(([label, value]) => `<div class="profile-row"><b>${label}</b><span>${value}</span></div>`).join('');
+}
+
+function memberTotals(m){
+  const totalPaid = (m.history || []).reduce((s,h)=>s+h.paid,0);
+  const expected = (m.monthly || 0) * (m.history ? m.history.length : 0);
+  const due = Math.max(expected - totalPaid, 0);
+  let status = 'paid';
+  if(due > 0 && totalPaid > 0) status = 'partial';
+  else if(due > 0) status = 'due';
+  return { totalPaid, due, status };
+}
+
+function render(){
+  document.getElementById('siteTitle').textContent = SOMITI_DATA.name;
+  document.getElementById('footerName').textContent = SOMITI_DATA.name;
+  document.getElementById('siteTagline').textContent = SOMITI_DATA.tagline;
+  document.title = SOMITI_DATA.name;
+  document.getElementById('heroYear').textContent = 'প্রতিষ্ঠাকাল: ' + SOMITI_DATA.founded;
+  document.getElementById('heroObjective').textContent = SOMITI_DATA.objective;
+  document.getElementById('statMembers').textContent = bn(SOMITI_DATA.members.length);
+  document.getElementById('statBalance').textContent = money(SOMITI_DATA.totalBalance);
+
+  document.getElementById('cPresident').textContent = SOMITI_DATA.contact.president;
+  document.getElementById('cSecretary').textContent = SOMITI_DATA.contact.secretary;
+  document.getElementById('cTreasurer').textContent = SOMITI_DATA.contact.treasurer;
+  document.getElementById('cPhone').textContent = SOMITI_DATA.contact.phone;
+  document.getElementById('cAddress').textContent = SOMITI_DATA.contact.address;
+
+  document.getElementById('noticeList').innerHTML = SOMITI_DATA.notices.map(n => `
+    <div class="notice"><div class="date mono">${n.date}</div><div><h3>${n.title}</h3><p>${n.body}</p></div></div>`).join('');
+
+  document.getElementById('rulesList').innerHTML = SOMITI_DATA.rules.map((r,i) => `
+    <div class="rule-item"><div class="rule-num mono">${bn(i+1)}</div><div>${r}</div></div>`).join('');
+
+  document.getElementById('memberGrid').innerHTML = SOMITI_DATA.members.map(m => `
+    <div class="card member-card">
+      <div class="avatar">${m.name.trim()[0]}</div>
+      <div><div class="mname">${m.name}</div><div class="role">${m.id}</div></div>
+    </div>`).join('');
+
+  renderAdminTable([]);
+}
+
+let fetchedMembers = [];
+
+function renderDashboard(list){
+  const liveBalance = list.reduce((s,m)=>s+memberTotals(m).totalPaid,0);
+  document.getElementById('dashBalance').textContent = money(liveBalance);
+
+  const reportPills = [
+    ['আজকের সংগ্রহ', 0, 'green'],
+    ['বিতরণ (ঋণ/উত্তোলনের)', 0, 'amber'],
+    ['অফিস খরচ', 0, 'red'],
+    ['আজকের লাভ', 0, 'green'],
+    ['লেট ফি/জরিমানা', 0, 'amber'],
+    ['আজকের নিট ক্যাশ', 0, '']
+  ];
+  document.getElementById('sdashReportRow').innerHTML = reportPills.map(([label, val, cls]) => `
+    <div class="sdash-pill ${cls}"><div class="pnum">${money(val)}</div><div class="plbl">${label}</div></div>
+  `).join('');
+
+  const recent = list
+    .filter(m => m.history && m.history.length > 0)
+    .map(m => ({ name: m.name, entry: m.history[m.history.length - 1] }))
+    .slice(0, 6);
+
+  document.getElementById('dashRecentTxns').innerHTML = recent.length ? recent.map(r => `
+    <div class="dash-txn-row">
+      <div class="txn-icon ${r.entry.status}">${r.entry.status === 'due' ? '!' : '৳'}</div>
+      <div>
+        <div class="dash-txn-name">${r.name}</div>
+        <div class="dash-txn-sub">${r.entry.month} — মাসিক চাঁদা</div>
+      </div>
+      <div class="dash-txn-amt ${r.entry.status}">${money(r.entry.paid)}</div>
+    </div>`).join('') : '<div style="color:var(--ink-soft); font-size:.85rem; padding:10px 0;">এখনো কোনো লেনদেন নেই।</div>';
+}
+
+function renderTxnLedger(list, filterText){
+  const q = (filterText||'').trim().toLowerCase();
+  let rows = [];
+  list.forEach(m => {
+    (m.history||[]).forEach(h => {
+      rows.push({ name: m.name, id: m.id, month: h.month, paid: h.paid, status: h.status, paymentDate: h.paymentDate||'', paymentMethod: h.paymentMethod||'' });
+    });
+  });
+  if(q) rows = rows.filter(r => r.name.toLowerCase().includes(q));
+  rows.sort((a,b) => (b.paymentDate||'').localeCompare(a.paymentDate||''));
+
+  document.getElementById('txnLedgerBody').innerHTML = rows.length ? rows.map(r => `
+    <tr>
+      <td>${r.name} <span class="mid" style="margin-left:4px;">(${r.id})</span></td>
+      <td class="amt">${r.month}</td>
+      <td class="amt">${r.paymentDate || '—'}</td>
+      <td class="amt">${r.paymentMethod || '—'}</td>
+      <td class="amt">${money(r.paid)}</td>
+      <td><span class="status ${r.status}">${statusLabel[r.status]}</span></td>
+    </tr>
+  `).join('') : '<tr><td colspan="6" style="text-align:center; color:var(--ink-soft); padding:20px;">এখনো কোনো লেনদেন নেই।</td></tr>';
+}
+
+function renderAdminTable(list){
+  const totalPaid = list.reduce((s,m)=>s+memberTotals(m).totalPaid,0);
+  const totalDue = list.reduce((s,m)=>s+memberTotals(m).due,0);
+  document.getElementById('sumMembers').textContent = bn(list.length);
+  document.getElementById('sumPaid').textContent = money(totalPaid);
+  document.getElementById('sumDue').textContent = money(totalDue);
+
+  document.getElementById('accountsBody').innerHTML = list.map(m => {
+    const t = memberTotals(m);
+    const historyRows = (m.history||[]).map((h, idx) => {
+      const detailBits = [h.paymentMethod, h.receiptNo ? ('রিসিট# '+h.receiptNo) : '', h.collectedBy ? ('সংগ্রহ: '+h.collectedBy) : '', h.paymentDate].filter(Boolean).join(' • ');
+      return `
+      <tr class="sub-row" data-hist-view="${m.id}-${idx}">
+        <td colspan="2" style="padding-left:32px;">
+          <div style="color:var(--ink-soft);">${h.month}</div>
+          ${detailBits ? `<div style="font-size:.72rem; color:var(--ink-soft); opacity:.8;">${detailBits}</div>` : ''}
+        </td>
+        <td></td>
+        <td class="amt">${money(h.paid)}</td>
+        <td></td>
+        <td style="display:flex; align-items:center; gap:8px; justify-content:flex-end;">
+          <span class="status ${h.status}">${statusLabel[h.status]}</span>
+          <button class="hist-icon-btn" data-hist-edit="${m.id}" data-hist-idx="${idx}" title="এডিট করুন">✏️</button>
+          <button class="hist-icon-btn" data-hist-del="${m.id}" data-hist-idx="${idx}" title="মুছুন">🗑️</button>
+        </td>
+      </tr>
+      <tr class="sub-row hidden" data-hist-edit-row="${m.id}-${idx}">
+        <td colspan="6" style="padding:10px 20px 10px 32px;">
+          <div class="edit-grid" style="margin-bottom:8px;">
+            <label>মাস<input type="text" id="he-month-${m.id}-${idx}" value="${h.month}"></label>
+            <label>টাকার পরিমাণ<input type="number" id="he-paid-${m.id}-${idx}" value="${h.paid}"></label>
+            <label>স্ট্যাটাস
+              <select id="he-status-${m.id}-${idx}">
+                <option value="paid" ${h.status==='paid'?'selected':''}>পরিশোধিত</option>
+                <option value="due" ${h.status==='due'?'selected':''}>বকেয়া</option>
+                <option value="partial" ${h.status==='partial'?'selected':''}>আংশিক</option>
+              </select>
+            </label>
+            <label>পেমেন্ট তারিখ<input type="date" id="he-date-${m.id}-${idx}" value="${h.paymentDate||''}"></label>
+            <label>পেমেন্ট মেথড
+              <select id="he-method-${m.id}-${idx}">
+                <option value="নগদ" ${h.paymentMethod==='নগদ'?'selected':''}>নগদ (Cash)</option>
+                <option value="ব্যাংক ট্রান্সফার" ${h.paymentMethod==='ব্যাংক ট্রান্সফার'?'selected':''}>ব্যাংক ট্রান্সফার</option>
+                <option value="মোবাইল ব্যাংকিং" ${h.paymentMethod==='মোবাইল ব্যাংকিং'?'selected':''}>মোবাইল ব্যাংকিং (বিকাশ/নগদ)</option>
+              </select>
+            </label>
+            <label>রিসিট নম্বর<input type="text" id="he-receipt-${m.id}-${idx}" value="${h.receiptNo||''}"></label>
+            <label>সংগ্রহকারী<input type="text" id="he-collector-${m.id}-${idx}" value="${h.collectedBy||''}"></label>
+            <label style="grid-column:1/-1;">মন্তব্য<input type="text" id="he-remarks-${m.id}-${idx}" value="${h.remarks||''}"></label>
+          </div>
+          <button class="edit-save-btn" data-hist-save="${m.id}" data-hist-save-idx="${idx}">✅ সংরক্ষণ করুন</button>
+          <button class="edit-save-btn" style="background:#999;" data-hist-cancel="${m.id}-${idx}">✖ বাতিল</button>
+          <span class="edit-status" id="he-status-msg-${m.id}-${idx}"></span>
+        </td>
+      </tr>
+    `;
+    }).join('');
+    return `<tr class="member-row" data-id="${m.id}" style="cursor:pointer;">
+      <td>▸ ${m.name}</td>
+      <td class="amt">${m.id}</td>
+      <td class="amt">${money(m.monthly||0)}</td>
+      <td class="amt">${money(t.totalPaid)}</td>
+      <td class="amt">${money(t.due)}</td>
+      <td><span class="status ${t.status}">${statusLabel[t.status]}</span></td>
+    </tr>
+    <tr class="history-rows hidden" data-parent="${m.id}">
+      <td colspan="6" style="padding:0;">
+        <div class="edit-panel">
+          <div class="edit-panel-title">প্রোফাইল এডিট করুন</div>
+          <div class="edit-grid">
+            <label>নাম<input type="text" id="ef-name-${m.id}" value="${m.name||''}"></label>
+            <label>ইমেইল<input type="email" id="ef-email-${m.id}" value="${m.email||''}"></label>
+            <label>মাসিক চাঁদা<input type="number" id="ef-monthly-${m.id}" value="${m.monthly||0}"></label>
+            <label>মোবাইল<input type="text" id="ef-mobile-${m.id}" value="${m.mobile||''}"></label>
+            <label>পিতার নাম<input type="text" id="ef-father-${m.id}" value="${m.father||''}"></label>
+            <label>মাতার নাম<input type="text" id="ef-mother-${m.id}" value="${m.mother||''}"></label>
+            <label>জন্মতারিখ<input type="text" id="ef-dob-${m.id}" value="${m.dob||''}"></label>
+            <label>নমিনি<input type="text" id="ef-nominee-${m.id}" value="${m.nominee||''}"></label>
+            <label style="grid-column:1/-1;">ঠিকানা<input type="text" id="ef-address-${m.id}" value="${m.address||''}"></label>
+          </div>
+          <button class="edit-save-btn" data-save-id="${m.id}">✅ প্রোফাইল সংরক্ষণ করুন</button>
+          <span class="edit-status" id="ef-status-${m.id}"></span>
+        </div>
+
+        <div class="edit-panel">
+          <div class="edit-panel-title">এই মাসের লেনদেন/কিস্তি যোগ করুন</div>
+          <div class="edit-grid">
+            <label>মাস<input type="text" id="mo-month-${m.id}" placeholder="যেমন: অক্টোবর ২০২৬"></label>
+            <label>টাকার পরিমাণ<input type="number" id="mo-paid-${m.id}" value="${m.monthly||0}"></label>
+            <label>স্ট্যাটাস
+              <select id="mo-status-${m.id}">
+                <option value="paid">পরিশোধিত</option>
+                <option value="due">বকেয়া</option>
+                <option value="partial">আংশিক</option>
+              </select>
+            </label>
+            <label>পেমেন্ট তারিখ<input type="date" id="mo-date-${m.id}"></label>
+            <label>পেমেন্ট মেথড
+              <select id="mo-method-${m.id}">
+                <option value="নগদ">নগদ (Cash)</option>
+                <option value="ব্যাংক ট্রান্সফার">ব্যাংক ট্রান্সফার</option>
+                <option value="মোবাইল ব্যাংকিং">মোবাইল ব্যাংকিং (বিকাশ/নগদ)</option>
+              </select>
+            </label>
+            <label>রিসিট নম্বর<input type="text" id="mo-receipt-${m.id}" placeholder="ঐচ্ছিক"></label>
+            <label>সংগ্রহকারী<input type="text" id="mo-collector-${m.id}" placeholder="কে সংগ্রহ করলো"></label>
+            <label style="grid-column:1/-1;">মন্তব্য<input type="text" id="mo-remarks-${m.id}" placeholder="ঐচ্ছিক"></label>
+          </div>
+          <button class="edit-save-btn" data-addmonth-id="${m.id}">➕ যোগ করুন</button>
+          <span class="edit-status" id="mo-status-msg-${m.id}"></span>
+        </div>
+
+        <table style="width:100%; margin:0;"><tbody>${historyRows}</tbody></table>
+      </td>
+    </tr>`;
+  }).join('');
+
+  document.querySelectorAll('.edit-save-btn[data-save-id]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const id = btn.dataset.saveId;
+      const statusEl = document.getElementById('ef-status-' + id);
+      statusEl.textContent = 'সংরক্ষণ হচ্ছে...';
+      try{
+        await db.collection('members').doc(id).update({
+          name: document.getElementById('ef-name-'+id).value.trim(),
+          email: document.getElementById('ef-email-'+id).value.trim(),
+          monthly: Number(document.getElementById('ef-monthly-'+id).value) || 0,
+          mobile: document.getElementById('ef-mobile-'+id).value.trim(),
+          father: document.getElementById('ef-father-'+id).value.trim(),
+          mother: document.getElementById('ef-mother-'+id).value.trim(),
+          dob: document.getElementById('ef-dob-'+id).value.trim(),
+          nominee: document.getElementById('ef-nominee-'+id).value.trim(),
+          address: document.getElementById('ef-address-'+id).value.trim()
+        });
+        statusEl.textContent = '✅ সংরক্ষিত হয়েছে!';
+        const snapshot = await db.collection('members').get();
+        fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAdminTable(fetchedMembers);
+        renderTxnLedger(fetchedMembers);
+        renderDashboard(fetchedMembers);
+      }catch(err){
+        statusEl.textContent = '❌ সমস্যা হয়েছে: ' + err.message;
+      }
+    });
+  });
+
+  document.querySelectorAll('.edit-save-btn[data-addmonth-id]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const id = btn.dataset.addmonthId;
+      const statusEl = document.getElementById('mo-status-msg-' + id);
+      const month = document.getElementById('mo-month-'+id).value.trim();
+      const paid = Number(document.getElementById('mo-paid-'+id).value) || 0;
+      const status = document.getElementById('mo-status-'+id).value;
+      const paymentDate = document.getElementById('mo-date-'+id).value;
+      const paymentMethod = document.getElementById('mo-method-'+id).value;
+      const receiptNo = document.getElementById('mo-receipt-'+id).value.trim();
+      const collectedBy = document.getElementById('mo-collector-'+id).value.trim();
+      const remarks = document.getElementById('mo-remarks-'+id).value.trim();
+      if(!month){ statusEl.textContent = '⚠️ মাসের নাম লিখুন।'; return; }
+      statusEl.textContent = 'যোগ হচ্ছে...';
+      try{
+        await db.collection('members').doc(id).update({
+          history: firebase.firestore.FieldValue.arrayUnion({ month, paid, status, paymentDate, paymentMethod, receiptNo, collectedBy, remarks })
+        });
+        statusEl.textContent = '✅ যোগ হয়েছে!';
+        const snapshot = await db.collection('members').get();
+        fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAdminTable(fetchedMembers);
+        renderTxnLedger(fetchedMembers);
+        renderDashboard(fetchedMembers);
+      }catch(err){
+        statusEl.textContent = '❌ সমস্যা হয়েছে: ' + err.message;
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-hist-edit]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const id = btn.dataset.histEdit;
+      const idx = btn.dataset.histIdx;
+      const row = document.querySelector(`[data-hist-edit-row="${id}-${idx}"]`);
+      if(row) row.classList.remove('hidden');
+    });
+  });
+
+  document.querySelectorAll('[data-hist-cancel]').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      e.stopPropagation();
+      const key = btn.dataset.histCancel;
+      const row = document.querySelector(`[data-hist-edit-row="${key}"]`);
+      if(row) row.classList.add('hidden');
+    });
+  });
+
+  document.querySelectorAll('[data-hist-save]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const id = btn.dataset.histSave;
+      const idx = Number(btn.dataset.histSaveIdx);
+      const statusEl = document.getElementById(`he-status-msg-${id}-${idx}`);
+      const month = document.getElementById(`he-month-${id}-${idx}`).value.trim();
+      const paid = Number(document.getElementById(`he-paid-${id}-${idx}`).value) || 0;
+      const status = document.getElementById(`he-status-${id}-${idx}`).value;
+      const paymentDate = document.getElementById(`he-date-${id}-${idx}`).value;
+      const paymentMethod = document.getElementById(`he-method-${id}-${idx}`).value;
+      const receiptNo = document.getElementById(`he-receipt-${id}-${idx}`).value.trim();
+      const collectedBy = document.getElementById(`he-collector-${id}-${idx}`).value.trim();
+      const remarks = document.getElementById(`he-remarks-${id}-${idx}`).value.trim();
+      if(!month){ statusEl.textContent = '⚠️ মাসের নাম লিখুন।'; return; }
+      statusEl.textContent = 'সংরক্ষণ হচ্ছে...';
+      try{
+        const member = fetchedMembers.find(m => m.id === id);
+        const newHistory = (member.history||[]).slice();
+        newHistory[idx] = { month, paid, status, paymentDate, paymentMethod, receiptNo, collectedBy, remarks };
+        await db.collection('members').doc(id).update({ history: newHistory });
+        const snapshot = await db.collection('members').get();
+        fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAdminTable(fetchedMembers);
+        renderTxnLedger(fetchedMembers);
+        renderDashboard(fetchedMembers);
+      }catch(err){
+        statusEl.textContent = '❌ সমস্যা হয়েছে: ' + err.message;
+      }
+    });
+  });
+
+  document.querySelectorAll('[data-hist-del]').forEach(btn=>{
+    btn.addEventListener('click', async (e)=>{
+      e.stopPropagation();
+      const id = btn.dataset.histDel;
+      const idx = Number(btn.dataset.histIdx);
+      if(!confirm('এই এন্ট্রিটা মুছে ফেলতে চান?')) return;
+      try{
+        const member = fetchedMembers.find(m => m.id === id);
+        const newHistory = (member.history||[]).slice();
+        newHistory.splice(idx, 1);
+        await db.collection('members').doc(id).update({ history: newHistory });
+        const snapshot = await db.collection('members').get();
+        fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+        renderAdminTable(fetchedMembers);
+        renderTxnLedger(fetchedMembers);
+        renderDashboard(fetchedMembers);
+      }catch(err){
+        alert('সমস্যা হয়েছে: ' + err.message);
+      }
+    });
+  });
+
+  document.querySelectorAll('#accountsBody tr.member-row').forEach(row => {
+    row.addEventListener('click', () => {
+      const id = row.dataset.id;
+      const detail = document.querySelector(`#accountsBody tr.history-rows[data-parent="${id}"]`);
+      const arrow = row.querySelector('td:first-child');
+      if(detail.classList.contains('hidden')){
+        detail.classList.remove('hidden');
+        arrow.textContent = arrow.textContent.replace('▸','▾');
+      } else {
+        detail.classList.add('hidden');
+        arrow.textContent = arrow.textContent.replace('▾','▸');
+      }
+    });
+  });
+}
+
+function renderMyView(member){
+  const t = memberTotals(member);
+  document.getElementById('myAvatar').innerHTML = avatarHTML(member);
+  document.getElementById('myName').textContent = member.name;
+  document.getElementById('myMobileLine').textContent = member.mobile ? ('মোবাইল: ' + member.mobile) : '';
+  document.getElementById('myId').textContent = 'Member ID: ' + member.id;
+  document.getElementById('myStatus').textContent = statusLabel[t.status];
+  document.getElementById('myStatus').className = 'status ' + t.status;
+  document.getElementById('myMonthly').textContent = money(member.monthly||0);
+  document.getElementById('myPaid').textContent = money(t.totalPaid);
+  document.getElementById('myDue').textContent = money(t.due);
+  document.getElementById('myProfileCard').innerHTML = profileFieldsHTML(member);
+  document.getElementById('myTxnList').innerHTML = (member.history||[]).slice().reverse().map(h => `
+    <div class="txn-row">
+      <div class="txn-icon ${h.status}">${h.status === 'due' ? '!' : '৳'}</div>
+      <div>
+        <div class="txn-title">মাসিক চাঁদা — ${statusLabel[h.status]}</div>
+        <div class="txn-date">${h.month}</div>
+      </div>
+      <div class="txn-amt ${h.status}">${money(h.paid)}</div>
+    </div>`).join('') || '<div style="padding:20px; color:var(--ink-soft); text-align:center;">এখনো কোনো লেনদেন নেই।</div>';
+}
+
+/* Navigation helper */
+function navigateToSection(targetId) {
+  document.querySelectorAll('#mainNav button').forEach(b=>{
+    b.classList.toggle('active', b.dataset.target === targetId);
+  });
+  document.querySelectorAll('main > section').forEach(s=>s.classList.add('hidden'));
+  const targetSection = document.getElementById(targetId);
+  if(targetSection) {
+    targetSection.classList.remove('hidden');
+  }
+  
+  // Close mobile nav if open
+  document.getElementById('mainNav').classList.remove('open');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+// Navigation event listeners
+document.querySelectorAll('#mainNav button').forEach(btn=>{
+  btn.addEventListener('click', ()=>{
+    navigateToSection(btn.dataset.target);
+  });
+});
+
+// Mobile menu toggle
+document.getElementById('menuToggle').addEventListener('click', ()=>{
+  document.getElementById('mainNav').classList.toggle('open');
+});
+
+// Admin table search
+document.getElementById('adminView').addEventListener('input', (e)=>{
+  if(e.target.id === 'memberSearch'){
+    const q = e.target.value.trim().toLowerCase();
+    renderAdminTable(fetchedMembers.filter(m => m.name.toLowerCase().includes(q)));
+  }
+  if(e.target.id === 'txnSearch'){
+    renderTxnLedger(fetchedMembers, e.target.value);
+  }
+});
+
+// Handle Apply Form Submission
+function handleApplySubmit(e) {
+  e.preventDefault();
+  const name = document.getElementById('applicantName').value.trim();
+  const phone = document.getElementById('applicantPhone').value.trim();
+  const statusEl = document.getElementById('applyStatus');
+
+  statusEl.style.color = 'var(--paid)';
+  statusEl.textContent = 'ধন্যবাদ! আপনার আবেদনটি সফলভাবে জমা হয়েছে। অতি শীঘ্রই আপনার সাথে যোগাযোগ করা হবে।';
+  document.getElementById('applyForm').reset();
+}
+
+/* ===================== Firebase Auth ===================== */
+const loginGate = document.getElementById('loginGate');
+const adminView = document.getElementById('adminView');
+const myView = document.getElementById('myView');
+const noMatchView = document.getElementById('noMatchView');
+const loginError = document.getElementById('loginError');
+
+function attemptLogin(){
+  const email = document.getElementById('loginEmail').value.trim();
+  const password = document.getElementById('loginPassword').value;
+  loginError.textContent = '';
+  if(!email || !password){ loginError.textContent = 'ইমেইল ও পাসওয়ার্ড দুটোই দিন।'; return; }
+  auth.signInWithEmailAndPassword(email, password)
+    .catch(err => { loginError.textContent = 'লগইন ব্যর্থ। ইমেইল/পাসওয়ার্ড ঠিক আছে কিনা দেখুন। (' + err.code + ')'; });
+}
+document.getElementById('loginBtn').addEventListener('click', attemptLogin);
+['loginEmail','loginPassword'].forEach(id=>{
+  document.getElementById(id).addEventListener('keydown', e=>{ if(e.key==='Enter') attemptLogin(); });
+});
+
+[['logoutBtnAdmin'],['logoutBtnMy'],['logoutBtnNoMatch']].forEach(([id])=>{
+  document.getElementById(id).addEventListener('click', ()=> auth.signOut());
+});
+
+auth.onAuthStateChanged(async user => {
+  [loginGate, adminView, myView, noMatchView].forEach(el => el.classList.add('hidden'));
+  if(!user){
+    loginGate.classList.remove('hidden');
+    document.getElementById('loginEmail').value = '';
+    document.getElementById('loginPassword').value = '';
+    return;
+  }
+  const email = (user.email || '').toLowerCase();
+
+  if(ADMIN_EMAILS.map(e=>e.toLowerCase()).includes(email)){
+    try{
+      const snapshot = await db.collection('members').get();
+      fetchedMembers = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      adminView.classList.remove('hidden');
+      renderAdminTable(fetchedMembers);
+      renderTxnLedger(fetchedMembers);
+      renderDashboard(fetchedMembers);
+    }catch(err){
+      loginGate.classList.remove('hidden');
+      loginError.textContent = 'ডেটা আনতে সমস্যা হয়েছে: ' + err.message;
+    }
+    return;
+  }
+
+  try{
+    const snapshot = await db.collection('members').where('email','==', user.email).limit(1).get();
+    if(!snapshot.empty){
+      const doc = snapshot.docs[0];
+      myView.classList.remove('hidden');
+      renderMyView({ id: doc.id, ...doc.data() });
+    } else {
+      noMatchView.classList.remove('hidden');
+    }
+  }catch(err){
+    noMatchView.classList.remove('hidden');
+  }
+});
+
+// Sidebar links
+document.querySelectorAll('.sdash-link').forEach(link => {
+  link.addEventListener('click', (e) => {
+    e.preventDefault();
+    if(link.dataset.soon){
+      alert('এই ফিচারটি এখনো তৈরি হয়নি — শীঘ্রই যোগ করা হবে। 🙂');
+      return;
+    }
+    document.querySelectorAll('.sdash-link').forEach(l => l.classList.remove('active'));
+    link.classList.add('active');
+    const target = document.getElementById(link.dataset.scroll);
+    if(target) target.scrollIntoView({ behavior:'smooth', block:'start' });
+  });
+});
+
+render();
+</script>// Firebase থেকে সরাসরি লাইভ তথ্য এনে হোম পেজে দেখানোর ফাংশন
+async function updateHomeStatsFromFirebase() {
+  try {
+    const snapshot = await db.collection('members').get();
+    const membersList = snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+    // মোট জমা টাকা হিসাব (সব সদস্যের ইতিহাস থেকে paid যোগ করে)
+    const totalBalance = membersList.reduce((sum, member) => {
+      const memberPaid = (member.history || []).reduce((hSum, h) => hSum + (Number(h.paid) || 0), 0);
+      return sum + memberPaid;
+    }, 0);
+
+    // হোম পেজের ব্যালেন্স আপডেট
+    const balanceEl = document.getElementById('statBalance');
+    if (balanceEl) {
+      balanceEl.textContent = money(totalBalance);
+    }
+  } catch (error) {
+    console.error("Home stats error:", error);
+  }
+}
+
+// সাইট লোড হওয়া এবং লগইন স্ট্যাটাস চেক হওয়ার পর রান হবে
+auth.onAuthStateChanged(() => {
+  updateHomeStatsFromFirebase();
+});
+</body>
+</html>
