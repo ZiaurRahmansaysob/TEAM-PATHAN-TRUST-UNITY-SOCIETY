@@ -1599,11 +1599,18 @@ if (typeof auth !== 'undefined') {
 }
 </script> 
 function showPage(pageName) {
-    // আগের দৃশ্যমান সেকশনগুলো লুকাতে এবং নতুন পেজ দেখাতে এটি কাজ করবে
-    console.log(pageName + " পেজ লোড হচ্ছে...");
-    
-    // আপনি চাইলে প্রতিটি মেনুর জন্য আলাদা কন্টেন্ট সেকশন অন/অফ করতে পারেন
-    alert(pageName + " অপশনটি সিলেক্ট করা হয়েছে।");
+    // সব সেকশন লুকানো
+    document.querySelectorAll('.view-section, .page-section, main > div').forEach(sec => {
+        sec.style.display = 'none';
+    });
+
+    // ক্লিক করা সেকশনটি চালু করা
+    const target = document.getElementById(pageName) || document.getElementById('section-' + pageName);
+    if (target) {
+        target.style.display = 'block';
+    } else {
+        alert(pageName + " সেকশনটির কন্টেন্ট এখনও HTML-এ তৈরি করা হয়নি।");
+    }
 }
 </script>
 </body>
