@@ -311,10 +311,11 @@
     .hero-stats{ grid-template-columns:1fr 1fr; }
   }
   @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } *{ transition:none !important; } }
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </style>
 </head>
 <body>
-
+<div id="sidebar-overlay" class="overlay"></div>
 <header>
   <div class="header-inner">
     <div class="brand">
@@ -325,6 +326,7 @@
       </div>
     </div>
     <button class="menu-toggle" id="menuToggle" aria-label="Toggle Navigation">☰</button>
+    <button id="dark-mode-toggle" class="theme-btn">🌙 ডার্ক মোড</button>
     <nav id="mainNav">
       <button data-target="home" class="active">হোম</button>
       <button data-target="members">সদস্য তালিকা</button>
