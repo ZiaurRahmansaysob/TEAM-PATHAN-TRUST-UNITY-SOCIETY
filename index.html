@@ -311,8 +311,47 @@
     .hero-stats{ grid-template-columns:1fr 1fr; }
   }
   @media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } *{ transition:none !important; } }
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
 </style>
+  /* ডার্ক মোড স্টাইল */
+body.dark-mode {
+    background-color: #121212 !important;
+    color: #ffffff !important;
+}
+body.dark-mode .sidebar, 
+body.dark-mode .chart-box, 
+body.dark-mode .transaction-card,
+body.dark-mode header {
+    background-color: #1e1e1e !important;
+    color: #ffffff !important;
+}
+
+/* অফ-ক্যানভাস মোবাইল সাইডবার */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        left: -260px;
+        top: 0;
+        width: 250px;
+        height: 100%;
+        transition: left 0.3s ease;
+        z-index: 1000;
+    }
+    .sidebar.active {
+        left: 0;
+    }
+    .overlay {
+        display: none;
+        position: fixed;
+        top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+    }
+    .overlay.active {
+        display: block;
+    }
+}
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div id="sidebar-overlay" class="overlay"></div>
@@ -1858,6 +1897,33 @@ loadPublicStatsForHome();
       .then(data => alert("SMS সফলভাবে পাঠানো হয়েছে!"))
       .catch(error => alert("SMS পাঠাতে সমস্যা হয়েছে।"));
   }
+  // ১. মোবাইল মেনু টগল
+const menuBtn = document.getElementById('menuToggle');
+const sidebar = document.querySelector('.sidebar') || document.querySelector('nav');
+const overlay = document.getElementById('sidebar-overlay');
+
+if (menuBtn) {
+    menuBtn.addEventListener('click', () => {
+        if (sidebar) sidebar.classList.toggle('active');
+        if (overlay) overlay.classList.toggle('active');
+    });
+    if (overlay) {
+        overlay.addEventListener('click', () => {
+            if (sidebar) sidebar.classList.remove('active');
+            overlay.classList.remove('active');
+        });
+    }
+}
+
+// ২. ডার্ক মোড টগল
+const darkBtn = document.getElementById('dark-mode-toggle');
+if (darkBtn) {
+    darkBtn.addEventListener('click', () => {
+        document.body.classList.toggle('dark-mode');
+        const isDark = document.body.classList.contains('dark-mode');
+        darkBtn.innerText = isDark ? "☀️ লাইট মোড" : "🌙 ডার্ক মোড";
+    });
+}
 </script>
 <!-- ================= SMS ও WhatsApp ফাংশন শেষ ================= -->
 </html>
