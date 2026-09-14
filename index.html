@@ -1791,5 +1791,71 @@ render();
 loadPublicPhotosAndUpdateGrid();
 loadPublicStatsForHome();
 </script>
-</body>
+</body><!-- ================= SMS ও WhatsApp ফাংশন শুরু ================= -->
+<style>
+  .btn-wa {
+    background-color: #25D366;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    margin-right: 4px;
+  }
+  .btn-wa:hover {
+    background-color: #1ebc57;
+  }
+  .btn-sms {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  .btn-sms:hover {
+    background-color: #0056b3;
+  }
+</style>
+
+<script>
+  // ১. WhatsApp রিমাইন্ডার পাঠানোর ফাংশন
+  function sendWhatsAppReminder(memberName, phone, amount, month) {
+    if (!phone || phone === '—') {
+      alert("সদস্যের ফোন নম্বর পাওয়া যায়নি!");
+      return;
+    }
+    
+    let cleanPhone = phone.replace(/[^0-9]/g, '');
+    if (cleanPhone.startsWith('0')) {
+      cleanPhone = '88' + cleanPhone;
+    }
+
+    const message = `প্রিয় ${memberName}, TEAM PATHAN TRUST & UNITY SOCIETY-তে আপনার ${month} মাসের চাঁদা ৳${amount} বকেয়া রয়েছে। অনুগ্রহ করে দ্রুত পরিশোধ করার জন্য অনুরোধ করা হচ্ছে। ধন্যবাদ!`;
+    const waUrl = `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    
+    window.open(waUrl, '_blank');
+  }
+
+  // ২. SMS পাঠানোর ফাংশন (Greenweb API)
+  function sendSMSReminder(memberName, phone, amount, month) {
+    if (!phone || phone === '—') {
+      alert("সদস্যের ফোন নম্বর পাওয়া যায়নি!");
+      return;
+    }
+    
+    const apiKey = "YOUR_GREENWEB_API_KEY"; // আপনার API Key
+    const message = `Priya ${memberName}, Team Pathan Society-te apnar ${month} masher chada TK ${amount} bokeya ache. Doyakore druto porishodh korun.`;
+
+    fetch(`https://api.greenweb.com.bd/api.php?token=${apiKey}&to=${phone}&message=${encodeURIComponent(message)}`)
+      .then(response => response.text())
+      .then(data => alert("SMS সফলভাবে পাঠানো হয়েছে!"))
+      .catch(error => alert("SMS পাঠাতে সমস্যা হয়েছে।"));
+  }
+</script>
+<!-- ================= SMS ও WhatsApp ফাংশন শেষ ================= -->
 </html>
