@@ -354,6 +354,7 @@ body.dark-mode header {
 
    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
 <div id="sidebar-overlay" class="overlay"></div>
@@ -1834,6 +1835,9 @@ render();
 loadPublicPhotosAndUpdateGrid();
 loadPublicStatsForHome();
 </script>
+  <!-- আপনার পেমেন্ট ফর্ম কোডটি এখানে বসবে -->
+  </body>
+</html>
 </body><!-- ================= SMS ও WhatsApp ফাংশন শুরু ================= -->
 <style>
   .btn-wa {
@@ -1924,6 +1928,44 @@ if (darkBtn) {
         document.body.classList.toggle('dark-mode');
         const isDark = document.body.classList.contains('dark-mode');
         darkBtn.innerText = isDark ? "☀️ লাইট মোড" : "🌙 ডার্ক মোড";
+    });
+}
+  // পেমেন্ট সাবমিট ও অটোমেটিক PDF রিসিট ডাউনলোড লজিক
+const paymentForm = document.getElementById('paymentForm');
+
+if (paymentForm) {
+    paymentForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        // ফর্মের ইনপুট ভ্যালু নেওয়া
+        const name = document.getElementById('memberName').value;
+        const amount = document.getElementById('payAmount').value;
+        const trx = document.getElementById('trxID').value;
+        const today = new Date().toLocaleDateString('bn-BD');
+
+        // PDF তৈরি করার কোড
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF();
+
+        doc.setFontSize(16);
+        doc.text("TEAM PATHAN TRUST & UNITY SOCIETY", 20, 20);
+        doc.setFontSize(12);
+        doc.text("Money Receipt / টাকা প্রাপ্তির রিসিট", 20, 30);
+        doc.line(20, 33, 190, 33);
+
+        doc.text(`তারিখ: ${today}`, 20, 45);
+        doc.text(`সদস্যের নাম: ${name}`, 20, 55);
+        doc.text(`জমার পরিমাণ: BDT ${amount}`, 20, 65);
+        doc.text(`ট্রানজেকশন আইড (TrxID): ${trx}`, 20, 75);
+        doc.text(`স্ট্যাটাস: সফল (Pending Approval)`, 20, 85);
+
+        doc.text("ধন্যবাদ, একতাই আমাদের শক্তি।", 20, 105);
+
+        // অটো ডাউনলোড
+        doc.save(`Receipt_${trx}.pdf`);
+
+        alert("পেমেন্ট সফলভাবে জমা হয়েছে এবং রিসিট ডাউনলোড হয়েছে!");
+        paymentForm.reset();
     });
 }
 </script>
