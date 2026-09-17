@@ -458,13 +458,12 @@
               <div class="dash-label">সমিতির মোট ব্যালেন্স</div>
               <div class="dash-balance-num" id="dashBalance">৳০</div>
               <div class="dash-sub">Vault • সঞ্চয় ও তহবিল</div>
-            </div>
-            <div class="card dash-txn-card">
-              <div class="dash-txn-head">
-                <span>সাম্প্রতিক লেনদেন</span>
-              </div>
-              <div id="dashRecentTxns"></div>
-            </div>
+          <div class="card">
+  <h3>আর্থিক সারসংক্ষেপ (মাসিক)</h3>
+  <div style="position: relative; height: 300px; width: 100%;">
+    <canvas id="mainDashboardChart"></canvas>
+  </div>
+</div>
           </div>
 
           <div class="sdash-report-row" id="sdashReportRow"></div>
@@ -1899,6 +1898,39 @@ document.getElementById('exportTxnBtn').addEventListener('click', exportTxnToCSV
 render();
 loadPublicPhotosAndUpdateGrid();
 loadPublicStatsForHome();
+</script>
+  <!-- Chart.js Library -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const ctx = document.getElementById('mainDashboardChart');
+  if (ctx) {
+    new Chart(ctx.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['জানুয়ারি', 'ফেব্রুয়ারি', 'মার্চ', 'এপ্রিল', 'মে', 'জুন', 'জুলাই', 'আগস্ট', 'সেপ্টেম্বর', 'অক্টোবর', 'নভেম্বর', 'ডিসেম্বর'],
+        datasets: [
+          {
+            label: 'জমা (৳)',
+            data: [5000, 7000, 8000, 6000, 9000, 8500, 0, 0, 0, 0, 0, 0],
+            backgroundColor: '#2ea44f'
+          },
+          {
+            label: 'খরচ (৳)',
+            data: [2000, 1500, 3000, 1000, 2500, 4000, 0, 0, 0, 0, 0, 0],
+            backgroundColor: '#e53e3e'
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        plugins: {
+          legend: { position: 'top' }
+        }
+      }
+    });
+  }
 </script>
 </body>
 </html>
