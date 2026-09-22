@@ -350,6 +350,33 @@
     display: none !important;
   }
 }
+  @media (max-width: 768px) {
+  /* ১. পুরো বডি এবং কন্টেইনার মোবাইল ফ্রেন্ডলি করা */
+  html, body {
+    width: 100% !important;
+    overflow-x: hidden !important; /* সাইডে স্ক্রোল হওয়া বন্ধ করবে */
+  }
+
+  /* ২. সবরকম কার্ড ও ড্যাশবোর্ড গ্রিড এক লাইনে নিচে নামানো */
+  div, main, section, .container, .grid, .card-grid, .dashboard {
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  /* ৩. গ্রিড লেআউট ফ্ল্যাট করা */
+  [class*="grid"], [class*="card"], [class*="row"] {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  /* ৪. টেবিল বা বড় এলিমেন্ট স্ক্রিনের বাইরে গেলে স্ক্রোল করার সুবিধা */
+  table {
+    display: block !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+  }
+}
 </style>
   <link rel="manifest" href="manifest.json">
 </head>
