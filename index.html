@@ -333,6 +333,7 @@
   body.dark-mode .rule-item,
   body.dark-mode .notice{ border-color:#333347; }
 </style>
+  <link rel="manifest" href="manifest.json">
 </head>
 <body>
 
@@ -2083,6 +2084,11 @@ document.getElementById('loanApplyBtn').addEventListener('click', async ()=>{
 render();
 loadPublicPhotosAndUpdateGrid();
 loadPublicStatsForHome();
+</script>
+  <script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('./service-worker.js');
+  }
 </script>
 </body>
 </html>
