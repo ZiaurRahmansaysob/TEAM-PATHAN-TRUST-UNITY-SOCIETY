@@ -332,6 +332,24 @@
   body.dark-mode .mid{ color:#A9A6C0; }
   body.dark-mode .rule-item,
   body.dark-mode .notice{ border-color:#333347; }
+  /* মোবাইল রেসপন্সিভ কোড */
+@media (max-width: 768px) {
+  .header-inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  
+  .grid, .card-container, .main-layout {
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .sidebar {
+    display: none !important;
+  }
+}
 </style>
   <link rel="manifest" href="manifest.json">
 </head>
